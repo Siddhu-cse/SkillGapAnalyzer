@@ -23,12 +23,24 @@ interface Project {
   repoType: string;
 }
 
+interface BlueprintData {
+  title: string;
+  tagline: string;
+  week1: string[];
+  week2: string[];
+  techStack: string[];
+  killerFeature: string;
+  readmeHook: string;
+}
+
 interface AnalysisResult {
   score: number;
   rejectionProbability?: number;
   summary: string;
   missingSkills: string[];
   presentSkills: string[];
+  targetRole?: string;
+  targetCompany?: string;
   softSkills?: {
     missing: string[];
     present: string[];
@@ -46,6 +58,8 @@ export default function ResultPage() {
   const router = useRouter();
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
+  const [blueprint, setBlueprint] = useState<BlueprintData | null>(null);
+  const [isGeneratingBlueprint, setIsGeneratingBlueprint] = useState(false);
 
   useEffect(() => {
     const data = sessionStorage.getItem("skillgap_result");
@@ -82,6 +96,28 @@ export default function ResultPage() {
         { name: "Docs/Youtube", url: `https://www.youtube.com/results?search_query=learn+${encodeURIComponent(skillName)}` }
       ]
     };
+  };
+
+  const generateBlueprint = async (skill: string) => {
+    setIsGeneratingBlueprint(true);
+    setBlueprint(null);
+    try {
+      const response = await fetch("/api/blueprint", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          skill, 
+          context: { targetRole: result.targetRole, targetCompany: result.targetCompany } 
+        }),
+      });
+      const data = await response.json();
+      if (data.error) throw new Error(data.error);
+      setBlueprint(data);
+    } catch (error) {
+      alert("Failed to orchestrate blueprint. Architecture sync failure.");
+    } finally {
+      setIsGeneratingBlueprint(false);
+    }
   };
 
   const currentDetail = selectedSkill ? getSkillDetail(selectedSkill) : null;
@@ -147,7 +183,7 @@ export default function ResultPage() {
                   </h3>
                   <div className="flex flex-wrap gap-3">
                     {missingSkills.map(s => (
-                      <button key={s} onClick={() => setSelectedSkill(s)} className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${selectedSkill === s ? "bg-red-500/20 border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.2)]" : "bg-white/5 border-white/10 text-white/50 hover:border-red-500/30"}`}>{s}</button>
+                      <button key={s} onClick={() => { setSelectedSkill(s); setBlueprint(null); }} className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${selectedSkill === s ? "bg-red-500/20 border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.2)]" : "bg-white/5 border-white/10 text-white/50 hover:border-red-500/30"}`}>{s}</button>
                     ))}
                   </div>
                 </div>
@@ -157,12 +193,71 @@ export default function ResultPage() {
                   </h3>
                   <div className="flex flex-wrap gap-3">
                     {presentSkills.map(s => (
-                      <button key={s} onClick={() => setSelectedSkill(s)} className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${selectedSkill === s ? "bg-green-500/20 border-green-500 shadow-[0_0_15px_rgba(34,197,94,0.2)]" : "bg-white/5 border-white/10 text-white/50 hover:border-green-500/30"}`}>{s}</button>
+                      <button key={s} onClick={() => { setSelectedSkill(s); setBlueprint(null); }} className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${selectedSkill === s ? "bg-green-500/20 border-green-500 shadow-[0_0_15px_rgba(34,197,94,0.2)]" : "bg-white/5 border-white/10 text-white/50 hover:border-green-500/30"}`}>{s}</button>
                     ))}
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Blueprint Display Panel */}
+            <AnimatePresence mode="wait">
+              {blueprint && (
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} className="glass-panel p-10 rounded-[3rem] border-2 border-[var(--color-neon-cyan)]/30 relative overflow-hidden bg-gradient-to-br from-[var(--color-neon-cyan)]/5 to-transparent">
+                  <div className="absolute top-0 right-0 p-8 opacity-10">
+                    <Cpu className="w-24 h-24 text-[var(--color-neon-cyan)]" />
+                  </div>
+                  <div className="text-[10px] font-black text-[var(--color-neon-cyan)] uppercase tracking-[0.4em] mb-4 flex items-center gap-2">
+                    <Sparkles className="w-4 h-4" /> Orchestrated Blueprint
+                  </div>
+                  <h3 className="text-3xl font-black mb-2 uppercase tracking-tighter">{blueprint.title}</h3>
+                  <p className="text-lg text-white/60 mb-10 italic">"{blueprint.tagline}"</p>
+                  
+                  <div className="grid md:grid-cols-2 gap-10 mb-10">
+                    <div className="space-y-4">
+                      <h4 className="text-[10px] font-black uppercase text-white/40 tracking-widest">Week 1: Foundations</h4>
+                      <ul className="space-y-3">
+                        {blueprint.week1.map((item, i) => (
+                          <li key={i} className="text-sm text-white/80 flex gap-3">
+                            <span className="text-[var(--color-neon-cyan)] font-black">0{i+1}</span>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="space-y-4">
+                      <h4 className="text-[10px] font-black uppercase text-white/40 tracking-widest">Week 2: Execution</h4>
+                      <ul className="space-y-3">
+                        {blueprint.week2.map((item, i) => (
+                          <li key={i} className="text-sm text-white/80 flex gap-3">
+                            <span className="text-[var(--color-neon-purple)] font-black">0{i+1}</span>
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="p-8 rounded-3xl bg-black/40 border border-white/5 space-y-6">
+                    <div className="flex flex-col md:flex-row justify-between gap-6">
+                      <div className="flex-1">
+                        <h4 className="text-[10px] font-black uppercase text-[var(--color-neon-cyan)] tracking-widest mb-3">The Killer Feature</h4>
+                        <p className="text-sm text-white/90 font-medium">{blueprint.killerFeature}</p>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="text-[10px] font-black uppercase text-[var(--color-neon-purple)] tracking-widest mb-3">Readme Strategy</h4>
+                        <p className="text-sm text-white/70 italic">{blueprint.readmeHook}</p>
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2 pt-4 border-t border-white/5">
+                      {blueprint.techStack.map(tech => (
+                        <span key={tech} className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-bold text-white/40 uppercase tracking-widest">{tech}</span>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Curated Learning Pathways */}
             <div className="glass-panel p-10 rounded-[2.5rem]">
@@ -244,6 +339,28 @@ export default function ResultPage() {
                         ))}
                       </div>
                     </div>
+
+                    {/* Action: Generate Blueprint */}
+                    {!blueprint && (
+                      <Button 
+                        onClick={() => generateBlueprint(selectedSkill)}
+                        disabled={isGeneratingBlueprint}
+                        variant="primary"
+                        className="w-full py-6 rounded-2xl gap-3 shadow-[0_0_20px_rgba(0,225,255,0.2)]"
+                      >
+                        {isGeneratingBlueprint ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Orchestrating...
+                          </>
+                        ) : (
+                          <>
+                            <Cpu className="w-4 h-4" />
+                            Generate Project Blueprint
+                          </>
+                        )}
+                      </Button>
+                    )}
                   </div>
                 </motion.div>
               ) : null}
