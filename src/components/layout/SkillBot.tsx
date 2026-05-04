@@ -48,12 +48,17 @@ export function SkillBot() {
         }),
       });
 
-      if (!response.ok) throw new Error("Chat failed");
-
       const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || data.details || "Chat failed");
+      }
+
       setMessages((prev) => [...prev, { role: "assistant", content: data.content }]);
     } catch (error) {
-      setMessages((prev) => [...prev, { role: "assistant", content: "Apologies, I'm experiencing a sync issue. Please try again." }]);
+      console.error("Chat Interaction Error:", error);
+      const errorMessage = error instanceof Error ? error.message : "Apologies, I'm experiencing a sync issue. Please try again.";
+      setMessages((prev) => [...prev, { role: "assistant", content: `Intelligence Sync Error: ${errorMessage}. Please try again.` }]);
     } finally {
       setIsLoading(false);
     }
