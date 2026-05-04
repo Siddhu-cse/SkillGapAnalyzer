@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { PDFParse } from "pdf-parse";
+import pdf from "pdf-parse";
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,10 +20,8 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer());
     let resumeText = "";
     try {
-      const parser = new PDFParse({ data: buffer });
-      const pdfData = await parser.getText();
+      const pdfData = await pdf(buffer);
       resumeText = pdfData.text;
-      await parser.destroy();
     } catch (e) {
       console.error("PDF Parsing Error:", e);
       return NextResponse.json({ error: "PDF read failed. Ensure it is a valid text-based PDF." }, { status: 400 });
