@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: skillgapanalyzer
+    runtime: node
+    buildCommand: npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: GROQ_API_KEY
+        sync: false # This will prompt the user to enter it in the dashboard

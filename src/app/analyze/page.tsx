@@ -43,7 +43,11 @@ export default function AnalyzePage() {
       const res = await fetch("/api/analyze", { method: "POST", body: formData });
       const data = await res.json();
       if (data.error) {
-        alert(data.error);
+        if (data.error.includes("No API Key")) {
+          alert("⚠️ Missing API Key: Please configure your GROQ_API_KEY in the Render dashboard (Environment settings) or .env.local file.");
+        } else {
+          alert(data.error);
+        }
         return;
       }
       sessionStorage.setItem("skillgap_result", JSON.stringify(data));
