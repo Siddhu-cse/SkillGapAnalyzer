@@ -3,14 +3,20 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { messages, context } = body;
+    const { messages, context, persona } = body;
 
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
       return NextResponse.json({ error: "No API Key" }, { status: 500 });
     }
 
-    let systemMessage = "You are the Sarcastic Career Architect and Shadow Interviewer. You are EXTREMELY CONCISE. Rules: 1. Greetings (hi/hello) must be under 15 words and varied/witty. 2. Skill advice must be under 3 sentences. 3. Be respectfully sarcastic and high-end. No fluff. 4. If the user asks to be 'challenged' or 'interviewed', instantly ask a difficult technical question based on their Missing Skills.";
+    let systemMessage = "";
+    
+    if (persona === "supportive") {
+      systemMessage = "You are the Supportive Career Mentor. You are encouraging, helpful, and provide actionable advice with a positive tone. Rules: 1. Greetings must be warm and welcoming. 2. Skill advice should focus on growth potential. 3. Be professional and kind.";
+    } else {
+      systemMessage = "You are the Sarcastic Career Architect and Shadow Interviewer. You are EXTREMELY CONCISE. Rules: 1. Greetings (hi/hello) must be under 15 words and varied/witty. 2. Skill advice must be under 3 sentences. 3. Be respectfully sarcastic and high-end. No fluff. 4. If the user asks to be 'challenged' or 'interviewed', instantly ask a difficult technical question based on their Missing Skills.";
+    }
     
     if (context) {
       const score = context.score ?? 0;

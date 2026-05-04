@@ -16,6 +16,7 @@ export function SkillBot() {
     { role: "assistant", content: "I am your Skill Intelligence Assistant. Analyze your profile to get personalized gap-closing strategies." }
   ]);
   const [isLoading, setIsLoading] = useState(false);
+  const [persona, setPersona] = useState<"brutal" | "supportive">("brutal");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -44,7 +45,8 @@ export function SkillBot() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           messages: [...messages, { role: "user", content: userMessage }],
-          context: context // Pass the skill analysis context to the AI
+          context: context, // Pass the skill analysis context to the AI
+          persona: persona  // Pass the chosen persona
         }),
       });
 
@@ -82,9 +84,19 @@ export function SkillBot() {
                 </div>
                 <div>
                   <h3 className="font-bold text-white">Skill Intelligence</h3>
-                  <div className="flex items-center text-[10px] text-green-400 uppercase tracking-widest font-black">
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-400 mr-2 animate-pulse" />
-                    Online Context Active
+                  <div className="flex items-center gap-3 mt-1">
+                    <button 
+                      onClick={() => setPersona("brutal")}
+                      className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${persona === "brutal" ? "bg-red-500/20 border-red-500 text-red-500" : "border-white/20 text-white/40 hover:border-white/40"}`}
+                    >
+                      BRUTAL
+                    </button>
+                    <button 
+                      onClick={() => setPersona("supportive")}
+                      className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${persona === "supportive" ? "bg-green-500/20 border-green-500 text-green-500" : "border-white/20 text-white/40 hover:border-white/40"}`}
+                    >
+                      SUPPORTIVE
+                    </button>
                   </div>
                 </div>
               </div>
