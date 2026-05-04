@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, XCircle, ArrowRight, BookOpen, TrendingUp, Briefcase, Zap, Loader2, Info, ExternalLink, Users, Star, MessageSquare, Target, Activity } from "lucide-react";
+import { CheckCircle2, XCircle, ArrowRight, BookOpen, TrendingUp, Briefcase, Zap, Loader2, Info, ExternalLink, Users, Star, MessageSquare, Target, Activity, DollarSign, Sparkles, Cpu, Bot, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface SkillDetail {
@@ -49,6 +49,17 @@ interface AnalysisResult {
   trendingSkills: string[];
   marketPulse?: Record<string, "Hype" | "Utility" | "Foundational">;
   suggestedRoles: string[];
+  promotionRoadmap?: {
+    nextLevel: string;
+    yearsEstimate: string;
+    criticalGap: string;
+    leadershipSkills: string[];
+  };
+  salaryIntelligence?: {
+    currentMarketRange: string;
+    potentialIncrease: string;
+    negotiationLeverage: string;
+  };
   courses: Array<{ title: string; platform: string; type: string; link?: string }>;
   projects?: Project[];
   interviewQuestions?: InterviewQuestion[];
@@ -285,32 +296,79 @@ export default function ResultPage() {
               )}
             </AnimatePresence>
 
-            {/* Curated Learning Pathways */}
-            <div className="glass-panel p-10 rounded-[2.5rem]">
-              <h2 className="text-2xl font-black mb-8 flex items-center gap-3">
-                <BookOpen className="w-6 h-6 text-[var(--color-neon-cyan)]" />
-                Curated Learning Pathways
-              </h2>
-              <div className="grid gap-4">
-                {courses.map((course, i) => (
-                  <a key={i} href={course.link?.startsWith('http') ? course.link : `https://www.youtube.com/results?search_query=${encodeURIComponent(course.title)}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-[var(--color-neon-cyan)]/5 hover:border-[var(--color-neon-cyan)]/30 transition-all group">
-                    <div className="flex items-center gap-6">
-                      <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-xl font-black text-white/40 group-hover:text-[var(--color-neon-cyan)]">{i + 1}</div>
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-widest ${course.platform.toLowerCase() === 'udemy' ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30' : 'bg-blue-500/20 text-blue-400 border border-blue-500/30'}`}>
-                            {course.platform}
-                          </span>
-                          <span className="text-[8px] font-black uppercase tracking-widest text-white/20">High ROI</span>
-                        </div>
-                        <h4 className="font-bold text-lg group-hover:text-white transition-colors">{course.title}</h4>
+            {/* Career Trajectory & Salary Intelligence */}
+            {result.promotionRoadmap && result.salaryIntelligence && (
+              <div className="grid md:grid-cols-2 gap-8">
+                {/* Promotion Predictor */}
+                <div className="glass-panel p-10 rounded-[3rem] border border-[var(--color-neon-purple)]/20 bg-gradient-to-br from-[var(--color-neon-purple)]/5 to-transparent">
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="w-10 h-10 rounded-2xl bg-[var(--color-neon-purple)]/10 flex items-center justify-center">
+                      <TrendingUp className="w-5 h-5 text-[var(--color-neon-purple)]" />
+                    </div>
+                    <h2 className="text-xl font-black uppercase tracking-tight">Promotion Predictor</h2>
+                  </div>
+                  
+                  <div className="space-y-6">
+                    <div>
+                      <div className="text-[10px] font-black uppercase text-white/40 tracking-widest mb-1">Target Milestone</div>
+                      <div className="text-2xl font-black text-white">{result.promotionRoadmap.nextLevel}</div>
+                    </div>
+                    
+                    <div>
+                      <div className="text-[10px] font-black uppercase text-white/40 tracking-widest mb-1">Estimated Timeline</div>
+                      <div className="text-xl font-bold text-[var(--color-neon-cyan)]">{result.promotionRoadmap.yearsEstimate}</div>
+                    </div>
+
+                    <div className="p-6 rounded-2xl bg-black/40 border border-white/5">
+                      <div className="text-[10px] font-black uppercase text-red-400 tracking-widest mb-2">Critical Growth Gap</div>
+                      <p className="text-sm text-white/70 italic leading-relaxed">"{result.promotionRoadmap.criticalGap}"</p>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2">
+                      {result.promotionRoadmap.leadershipSkills.map(s => (
+                        <span key={s} className="px-3 py-1 rounded-lg bg-[var(--color-neon-purple)]/10 border border-[var(--color-neon-purple)]/20 text-[8px] font-black text-[var(--color-neon-purple)] uppercase tracking-widest">{s}</span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Salary Benchmark */}
+                <div className="glass-panel p-10 rounded-[3rem] border border-[var(--color-neon-cyan)]/20 bg-gradient-to-br from-[var(--color-neon-cyan)]/5 to-transparent">
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="w-10 h-10 rounded-2xl bg-[var(--color-neon-cyan)]/10 flex items-center justify-center">
+                      <DollarSign className="w-5 h-5 text-[var(--color-neon-cyan)]" />
+                    </div>
+                    <h2 className="text-xl font-black uppercase tracking-tight">Salary Intelligence</h2>
+                  </div>
+
+                  <div className="space-y-8">
+                    <div>
+                      <div className="text-[10px] font-black uppercase text-white/40 tracking-widest mb-2">Market Benchmark (Current Role)</div>
+                      <div className="text-3xl font-black text-white">{result.salaryIntelligence.currentMarketRange}</div>
+                    </div>
+
+                    <div className="relative pt-2">
+                      <div className="flex justify-between items-end mb-2">
+                        <div className="text-[10px] font-black uppercase text-green-400 tracking-widest">Potential Upside</div>
+                        <div className="text-2xl font-black text-green-400">+{result.salaryIntelligence.potentialIncrease}</div>
+                      </div>
+                      <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          animate={{ width: "65%" }}
+                          className="h-full bg-gradient-to-r from-green-500 to-[var(--color-neon-cyan)]"
+                        />
                       </div>
                     </div>
-                    <ExternalLink className="w-5 h-5 text-white/10 group-hover:text-white transition-colors" />
-                  </a>
-                ))}
+
+                    <div className="p-6 rounded-2xl bg-black/40 border border-white/5">
+                      <div className="text-[10px] font-black uppercase text-[var(--color-neon-cyan)] tracking-widest mb-2">Negotiation Leverage</div>
+                      <p className="text-sm text-white/70 leading-relaxed">{result.salaryIntelligence.negotiationLeverage}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Portfolio Killer Projects */}
             {projects && projects.length > 0 && (

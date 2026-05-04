@@ -69,6 +69,17 @@ JSON Structure:
     "SkillName": "Hype" | "Utility" | "Foundational"
   },
   "suggestedRoles": ["string"],
+  "promotionRoadmap": {
+    "nextLevel": "string",
+    "yearsEstimate": "string",
+    "criticalGap": "string",
+    "leadershipSkills": ["string"]
+  },
+  "salaryIntelligence": {
+    "currentMarketRange": "string",
+    "potentialIncrease": "string",
+    "negotiationLeverage": "string"
+  },
   "courses": [{ "title": "string", "platform": "string", "type": "string", "link": "string" }],
   "projects": [{ "title": "string", "description": "string", "techStack": ["string"], "repoType": "string" }],
   "interviewQuestions": [{ "question": "string", "context": "string" }]
