@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, XCircle, ArrowRight, BookOpen, TrendingUp, Briefcase, Zap, Loader2, Info, ExternalLink, Users, Star, MessageSquare, Target, Activity, DollarSign, Sparkles, Cpu, Bot, X } from "lucide-react";
+import { CheckCircle2, XCircle, ArrowRight, BookOpen, TrendingUp, Briefcase, Zap, Loader2, Info, ExternalLink, Users, Star, MessageSquare, Target, Activity, DollarSign, Sparkles, Cpu, Bot, X, ShieldCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface SkillDetail {
@@ -405,7 +405,36 @@ export default function ResultPage() {
               </div>
             )}
 
-            {/* Portfolio Killer Projects */}
+            {/* The Brutal Audit Certificate */}
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} className="glass-panel p-16 rounded-[4rem] border-4 border-double border-white/10 text-center relative overflow-hidden bg-gradient-to-b from-white/[0.03] to-transparent">
+              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
+              <div className="relative z-10">
+                <div className="flex justify-center mb-10">
+                  <div className="w-24 h-24 rounded-full border-4 border-[var(--color-neon-cyan)] flex items-center justify-center relative">
+                    <ShieldCheck className="w-12 h-12 text-[var(--color-neon-cyan)]" />
+                    <div className="absolute -inset-2 border border-[var(--color-neon-cyan)]/30 rounded-full animate-spin-slow" />
+                  </div>
+                </div>
+                <h2 className="text-sm font-black uppercase tracking-[0.8em] text-[var(--color-neon-cyan)] mb-6">Official Career Diagnostic</h2>
+                <h3 className="text-5xl md:text-7xl font-black mb-8 uppercase tracking-tighter">Certified <span className="text-gradient">Benchmark</span></h3>
+                <p className="text-white/40 text-lg max-w-2xl mx-auto mb-12 leading-relaxed italic">
+                  "This profile has been surgically analyzed by the Brutal Career Architect. Gaps have been exposed. Potential has been quantified. There is no longer any room for ignorance."
+                </p>
+                <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+                  <div className="text-left px-8 py-4 border-l border-white/10">
+                    <div className="text-[10px] font-black uppercase text-white/20 tracking-widest">Diagnostic ID</div>
+                    <div className="text-xs font-mono text-white/60">#SKG-{Math.random().toString(36).substr(2, 9).toUpperCase()}</div>
+                  </div>
+                  <div className="text-left px-8 py-4 border-l border-white/10">
+                    <div className="text-[10px] font-black uppercase text-white/20 tracking-widest">Verification Date</div>
+                    <div className="text-xs font-mono text-white/60">{new Date().toLocaleDateString()}</div>
+                  </div>
+                  <Button onClick={() => window.print()} variant="primary" size="lg" className="px-12 rounded-2xl shadow-[0_0_30px_rgba(0,225,255,0.3)]">
+                    Download Audit Report
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
             {projects && projects.length > 0 && (
               <div className="glass-panel p-10 rounded-[2.5rem] border-t-4 border-[var(--color-neon-blue)]">
                 <h2 className="text-2xl font-black mb-8 flex items-center gap-3">
