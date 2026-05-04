@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { MessageCircle, X, Send, Bot, User, Loader2, Sparkles } from "lucide-react";
+import { X, Send, Bot, Loader2, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Message {
@@ -184,7 +184,7 @@ export function SkillBot() {
                   className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-6 pr-14 text-white placeholder:text-white/20 focus:outline-none focus:border-[var(--color-neon-cyan)]/50 transition-colors"
                 />
                 <button 
-                  onClick={handleSend}
+                  onClick={() => handleSend()}
                   className="absolute right-2 p-3 rounded-xl bg-[var(--color-neon-cyan)] text-black hover:scale-105 active:scale-95 transition-all"
                 >
                   <Send className="w-5 h-5" />

@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, XCircle, ArrowRight, BookOpen, TrendingUp, Briefcase, Zap, Loader2, Info, ExternalLink, Users, Star, MessageSquare, Target, Activity, DollarSign, Sparkles, Cpu, Bot, X, ShieldCheck } from "lucide-react";
+import { CheckCircle2, XCircle, TrendingUp, Briefcase, Zap, Loader2, Info, ExternalLink, MessageSquare, Target, Activity, DollarSign, Sparkles, Cpu, ShieldCheck } from "lucide-react";
+import { Button } from "../../components/ui/Button";
 import { useRouter } from "next/navigation";
 
 interface SkillDetail {
@@ -94,6 +95,8 @@ export default function ResultPage() {
   const [isGeneratingBlueprint, setIsGeneratingBlueprint] = useState(false);
   const [isGeneratingOutreach, setIsGeneratingOutreach] = useState(false);
   const [isRepairing, setIsRepairing] = useState(false);
+  const [diagnosticId] = useState(() => `#SKG-${Math.random().toString(36).substr(2, 9).toUpperCase()}`);
+  const [verificationDate] = useState(() => new Date().toLocaleDateString());
 
   useEffect(() => {
     const data = sessionStorage.getItem("skillgap_result");
@@ -103,9 +106,11 @@ export default function ResultPage() {
     }
     try {
       const parsed = JSON.parse(data);
-      setResult(parsed);
-      if (parsed.missingSkills?.length > 0) setSelectedSkill(parsed.missingSkills[0]);
-    } catch (e) {
+      Promise.resolve().then(() => {
+        setResult(parsed);
+        if (parsed.missingSkills?.length > 0) setSelectedSkill(parsed.missingSkills[0]);
+      });
+    } catch {
       router.push("/analyze");
     }
   }, [router]);
@@ -118,7 +123,7 @@ export default function ResultPage() {
     );
   }
 
-  const { score, rejectionProbability, summary, missingSkills, presentSkills, trendingSkills, marketPulse, suggestedRoles, courses, projects, skillDetails, softSkills, interviewQuestions } = result;
+  const { score, rejectionProbability, summary, missingSkills, presentSkills, trendingSkills, marketPulse, projects, skillDetails, interviewQuestions } = result;
 
   const getSkillDetail = (skillName: string): SkillDetail => {
     if (skillDetails && skillDetails[skillName]) return skillDetails[skillName];
@@ -147,7 +152,7 @@ export default function ResultPage() {
       const data = await response.json();
       if (data.error) throw new Error(data.error);
       setBlueprint(data);
-    } catch (error) {
+    } catch {
       alert("Failed to orchestrate blueprint. Architecture sync failure.");
     } finally {
       setIsGeneratingBlueprint(false);
@@ -166,7 +171,7 @@ export default function ResultPage() {
       const data = await response.json();
       if (data.error) throw new Error(data.error);
       setOutreach(data);
-    } catch (error) {
+    } catch {
       alert("Outreach orchestration failure.");
     } finally {
       setIsGeneratingOutreach(false);
@@ -189,7 +194,7 @@ export default function ResultPage() {
       const data = await response.json();
       if (data.error) throw new Error(data.error);
       setRepair(data);
-    } catch (error) {
+    } catch {
       alert("Resume repair failed. The Architect is busy.");
     } finally {
       setIsRepairing(false);
@@ -210,7 +215,7 @@ export default function ResultPage() {
               <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--color-neon-cyan)]">Career Architecture Blueprint</span>
             </div>
             <h1 className="text-4xl font-black mb-4 uppercase tracking-tighter">Market <span className="text-gradient">Benchmark</span> Result</h1>
-            <p className="text-white/60 text-xl italic font-medium leading-relaxed">"{summary}"</p>
+            <p className="text-white/60 text-xl italic font-medium leading-relaxed">&quot;{summary}&quot;</p>
           </div>
           <div className="flex flex-col md:flex-row gap-8 items-center">
             {/* Score Gauge */}
@@ -302,7 +307,7 @@ export default function ResultPage() {
                     <Sparkles className="w-4 h-4" /> Orchestrated Blueprint
                   </div>
                   <h3 className="text-3xl font-black mb-2 uppercase tracking-tighter">{blueprint.title}</h3>
-                  <p className="text-lg text-white/60 mb-10 italic">"{blueprint.tagline}"</p>
+                  <p className="text-lg text-white/60 mb-10 italic">&quot;{blueprint.tagline}&quot;</p>
                   
                   <div className="grid md:grid-cols-2 gap-10 mb-10">
                     <div className="space-y-4">
@@ -375,7 +380,7 @@ export default function ResultPage() {
 
                     <div className="p-6 rounded-2xl bg-black/40 border border-white/5">
                       <div className="text-[10px] font-black uppercase text-red-400 tracking-widest mb-2">Critical Growth Gap</div>
-                      <p className="text-sm text-white/70 italic leading-relaxed">"{result.promotionRoadmap.criticalGap}"</p>
+                      <p className="text-sm text-white/70 italic leading-relaxed">&quot;{result.promotionRoadmap.criticalGap}&quot;</p>
                     </div>
 
                     <div className="flex flex-wrap gap-2">
@@ -437,16 +442,16 @@ export default function ResultPage() {
                 <h2 className="text-sm font-black uppercase tracking-[0.8em] text-[var(--color-neon-cyan)] mb-6">Official Career Diagnostic</h2>
                 <h3 className="text-5xl md:text-7xl font-black mb-8 uppercase tracking-tighter">Certified <span className="text-gradient">Benchmark</span></h3>
                 <p className="text-white/40 text-lg max-w-2xl mx-auto mb-12 leading-relaxed italic">
-                  "This profile has been surgically analyzed by the Brutal Career Architect. Gaps have been exposed. Potential has been quantified. There is no longer any room for ignorance."
+                  &quot;This profile has been surgically analyzed by the Brutal Career Architect. Gaps have been exposed. Potential has been quantified. There is no longer any room for ignorance.&quot;
                 </p>
                 <div className="flex flex-col md:flex-row items-center justify-center gap-6">
                   <div className="text-left px-8 py-4 border-l border-white/10">
                     <div className="text-[10px] font-black uppercase text-white/20 tracking-widest">Diagnostic ID</div>
-                    <div className="text-xs font-mono text-white/60">#SKG-{Math.random().toString(36).substr(2, 9).toUpperCase()}</div>
+                    <div className="text-xs font-mono text-white/60">{diagnosticId}</div>
                   </div>
                   <div className="text-left px-8 py-4 border-l border-white/10">
                     <div className="text-[10px] font-black uppercase text-white/20 tracking-widest">Verification Date</div>
-                    <div className="text-xs font-mono text-white/60">{new Date().toLocaleDateString()}</div>
+                    <div className="text-xs font-mono text-white/60">{verificationDate}</div>
                   </div>
                   <Button onClick={() => window.print()} variant="primary" size="lg" className="px-12 rounded-2xl shadow-[0_0_30px_rgba(0,225,255,0.3)]">
                     Download Audit Report
