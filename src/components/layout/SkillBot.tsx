@@ -159,7 +159,7 @@ export function SkillBot() {
                   } else {
                     setIsInterviewMode(true);
                     setPersona("brutal");
-                    handleSend("Challenge me with a technical question based on my gaps.");
+                    handleSend("Challenge me with a domain-specific question based on my gaps.");
                   }
                 }}
                 className={`whitespace-nowrap px-3 py-1.5 rounded-lg border text-[10px] font-black uppercase transition-colors ${

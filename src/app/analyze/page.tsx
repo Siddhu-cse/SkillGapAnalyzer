@@ -78,7 +78,7 @@ export default function AnalyzePage() {
             Initialize <span className="text-gradient">Diagnostic</span>
           </h1>
           <p className="text-white/40 text-lg max-w-xl mx-auto">
-            Research your target role and benchmark your technical DNA against real-time market requirements.
+            Research your target role and benchmark your professional DNA against real-time market requirements.
           </p>
         </motion.div>
 

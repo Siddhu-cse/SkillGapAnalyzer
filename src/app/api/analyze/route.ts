@@ -38,11 +38,12 @@ CONTEXT:
 - Profile Identity: ${resumeText.slice(0, 4000)}
 
 CRITICAL LOGIC RULES:
+0. DOMAIN AGNOSTIC: You must support ANY professional domain (e.g., Software, HR, Business, Agriculture, Hotel Management). Generate relevant skills, resources, and terminology specific to that domain.
 1. SEMANTIC VALIDATION: If the 'Target Role' or 'Manual Skills' are gibberish (e.g., "skldfjgh"), completely unrelated objects (e.g., "pani puri", "pressure cooker"), or non-career terms, you MUST:
    - Set 'score' to 0.
    - Return an 'invalidInput' field set to true.
    - Set 'summary' to a brutally sarcastic rejection of their attempt to benchmark a non-career item.
-2. BENCHMARKING: For legitimate roles (e.g. "Senior Full Stack"), use 2024-2025 elite industry standards.
+2. BENCHMARKING: For legitimate roles (e.g. "Senior Full Stack", "HR Manager", "Agricultural Specialist"), use 2024-2025 elite industry standards.
 3. DELTA VISUALIZATION: Identify exact gaps between the Profile and the Industry Standard.
 4. REAL-WORLD SCORING: 0-100 integer. Be EXTREMELY STINGY. 90%+ is for world-class matches only. Nonsensical inputs = 0.
 5. REJECTION PROBABILITY: Calculate a brutal 0-100 percentage of how likely they are to be rejected by ${targetCompany || "a top-tier company"} based on their gaps.
@@ -85,7 +86,7 @@ JSON Structure:
     "shortReason": "string"
   },
   "courses": [{ "title": "string", "platform": "string", "type": "string", "link": "string" }],
-  "projects": [{ "title": "string", "description": "string", "techStack": ["string"], "repoType": "string" }],
+  "projects": [{ "title": "string", "description": "string", "techStack": ["string"], "repoType": "string" }], // Note: 'techStack' means 'Core Tools / Methodologies' for non-tech roles
   "interviewQuestions": [{ "question": "string", "context": "string" }]
 }
 

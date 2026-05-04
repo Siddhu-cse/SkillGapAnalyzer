@@ -13,15 +13,15 @@ export async function POST(req: NextRequest) {
     const prompt = `You are the Elite Networking Architect. Draft a hyper-personalized, high-conversion cold outreach message (for LinkedIn or Email) for a candidate targeting a role at '${context.targetCompany || "a top-tier company"}'.
 
     USER PROFILE:
-    - Tech Gaps: ${context.missingSkills?.join(", ") || "None"}
+    - Core Skill Gaps: ${context.missingSkills?.join(", ") || "None"}
     - Strengths: ${context.presentSkills?.join(", ") || "None"}
     - Readiness Score: ${context.score}%
 
     Rules:
     1. Be concise (under 150 words).
     2. Focus on a specific value proposition related to their strengths.
-    3. Include a "hook" that mentions a common engineering challenge at '${context.targetCompany || "the company"}'.
-    4. Provide two versions: "The Bold Engineer" and "The Strategic Learner".
+    3. Include a "hook" that mentions a common domain-specific challenge at '${context.targetCompany || "the company"}'.
+    4. Provide two versions: "The Bold Professional" and "The Strategic Learner".
 
     Return ONLY raw JSON:
     {

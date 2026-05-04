@@ -9,7 +9,7 @@ export default function HowItWorks() {
   const steps = [
     {
       title: "Diagnostic Initialization",
-      desc: "Securely upload your professional identity. Our engine parses binary PDF structures into a high-fidelity semantic map, capturing 100% of your current technical DNA.",
+      desc: "Securely upload your professional identity. Our engine parses binary PDF structures into a high-fidelity semantic map, capturing 100% of your current professional DNA.",
       icon: <Scan className="w-8 h-8 text-[var(--color-neon-blue)]" />,
       glow: "rgba(0, 225, 255, 0.3)",
       delay: 0.1
@@ -115,7 +115,7 @@ export default function HowItWorks() {
               </Link>
             </div>
             <div className="relative w-full md:w-[400px] h-[300px] flex items-center justify-center">
-              {/* Abstract Visual Tech Map */}
+              {/* Abstract Visual Career Map */}
               <div className="absolute inset-0 bg-grid-pattern opacity-20" />
               <div className="relative">
                 <Layout className="w-32 h-32 text-[var(--color-neon-blue)]/20 animate-pulse" />

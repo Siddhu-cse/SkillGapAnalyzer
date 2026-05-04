@@ -41,7 +41,7 @@ export default function MarketPulsePage() {
             Market <span className="text-gradient">Intelligence</span>
           </h1>
           <p className="text-white/40 text-xl max-w-2xl mx-auto">
-            Real-time benchmarking of the global technological landscape. Identify the shifts before they become mainstream.
+            Real-time benchmarking of the global professional landscape. Identify the shifts before they become mainstream.
           </p>
         </motion.div>
 

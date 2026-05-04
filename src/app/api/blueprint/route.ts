@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     const prompt = `You are the Elite Project Architect. Create a high-impact, unique, 2-week project blueprint for a student/employee who is missing the skill: '${skill}'.
     
     USER CONTEXT:
-    - Target Role: ${context.targetRole || "General Tech"}
+    - Target Role: ${context.targetRole || "General Professional"}
     - Target Company: ${context.targetCompany || "Top Tier"}
     
     The blueprint MUST include:
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     2. One-sentence unique value proposition.
     3. Week 1 Goals (Foundation & Core Logic)
     4. Week 2 Goals (Orchestration & Deployment)
-    5. Tech Stack (Be specific)
+    5. Core Tools / Methodologies (Be specific to their domain. Map to 'techStack' in JSON)
     6. "The Killer Feature" (Something that makes recruiters stop scrolling).
     7. GitHub Readme hook.
 
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
       "tagline": "string",
       "week1": ["string"],
       "week2": ["string"],
-      "techStack": ["string"],
+      "techStack": ["string"], // Note: Use for Core Tools/Methodologies if non-tech
       "killerFeature": "string",
       "readmeHook": "string"
     }`;

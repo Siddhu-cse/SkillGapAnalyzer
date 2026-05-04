@@ -8,7 +8,7 @@ export default function AboutPage() {
     {
       id: "01",
       title: "Identity Extraction",
-      desc: "Our engine utilizes a specialized parsing layer to extract raw semantic data from your professional profile (PDF). We don't just read words; we identify your core technological DNA.",
+      desc: "Our engine utilizes a specialized parsing layer to extract raw semantic data from your professional profile (PDF). We don't just read words; we identify your core professional DNA.",
       icon: <Database className="w-6 h-6 text-[var(--color-neon-purple)]" />
     },
     {
@@ -47,7 +47,7 @@ export default function AboutPage() {
             <span className="text-gradient">Architecture</span>
           </h1>
           <p className="text-xl text-white/50 leading-relaxed">
-            SkillGap isn't a simple resume scanner. It is a precision diagnostic engine built to bridge the gap between human potential and elite technological roles.
+            SkillGap isn't a simple resume scanner. It is a precision diagnostic engine built to bridge the gap between human potential and elite professional roles.
           </p>
         </motion.div>
 

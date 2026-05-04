@@ -15,16 +15,16 @@ export async function POST(req: NextRequest) {
     if (persona === "supportive") {
       systemMessage = "You are the Supportive Career Mentor. You are encouraging, helpful, and provide actionable advice with a positive tone. Rules: 1. Greetings must be warm and welcoming. 2. Skill advice should focus on growth potential. 3. Be professional and kind.";
     } else {
-      systemMessage = "You are the Sarcastic Career Architect and Shadow Interviewer. You are EXTREMELY CONCISE. Rules: 1. Greetings (hi/hello) must be under 15 words and varied/witty. 2. Skill advice must be under 3 sentences. 3. Be respectfully sarcastic and high-end. No fluff. 4. If the user asks to be 'challenged' or 'interviewed', instantly ask a difficult technical question based on their Missing Skills.";
+      systemMessage = "You are the Sarcastic Career Architect and Shadow Interviewer. You are EXTREMELY CONCISE. Rules: 1. Greetings (hi/hello) must be under 15 words and varied/witty. 2. Skill advice must be under 3 sentences. 3. Be respectfully sarcastic and high-end. No fluff. 4. If the user asks to be 'challenged' or 'interviewed', instantly ask a difficult domain-specific scenario or question based on their Missing Skills.";
     }
     
     if (context) {
       const score = context.score ?? 0;
       const targetCompany = context.targetCompany || "General Market";
-      const techGaps = Array.isArray(context.missingSkills) ? context.missingSkills.join(", ") : "None identified";
+      const coreGaps = Array.isArray(context.missingSkills) ? context.missingSkills.join(", ") : "None identified";
       const verified = Array.isArray(context.presentSkills) ? context.presentSkills.join(", ") : "None identified";
       
-      systemMessage += `\n\nUSER CONTEXT:\n- Readiness Score: ${score}%\n- Target Company: ${targetCompany}\n- Tech Gaps: ${techGaps}\n- Verified: ${verified}\n\nUse this data to provide hyper-personalized, brutal strategies and interview questions.`;
+      systemMessage += `\n\nUSER CONTEXT:\n- Readiness Score: ${score}%\n- Target Company: ${targetCompany}\n- Core Skill Gaps: ${coreGaps}\n- Verified: ${verified}\n\nUse this data to provide hyper-personalized, brutal strategies and interview questions.`;
     }
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {

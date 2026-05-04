@@ -51,7 +51,7 @@ export default function Home() {
     "Machine Learning": {
       icon: <Brain className="w-6 h-6" />,
       desc: "Statistical models and algorithms that improve through experience.",
-      importance: "Driving decision-making across all modern tech stacks."
+      importance: "Driving decision-making across all modern professional domains."
     },
     "Cloud Architecture": {
       icon: <Database className="w-6 h-6" />,
@@ -82,7 +82,7 @@ export default function Home() {
             <div className="space-y-12">
               <div>
                 <h2 className="text-4xl md:text-5xl font-black mb-6 uppercase tracking-tighter">Market <span className="text-gradient">Intelligence</span> Discovery</h2>
-                <p className="text-white/40 text-xl max-w-lg leading-relaxed">Explore the definitive profiles of high-impact technological shifts.</p>
+                <p className="text-white/40 text-xl max-w-lg leading-relaxed">Explore the definitive profiles of high-impact industry shifts.</p>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
