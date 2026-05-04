@@ -108,7 +108,8 @@ Return ONLY raw JSON. Do not include any text outside the JSON.`;
 
     try {
       const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
-      return NextResponse.json(JSON.parse(jsonMatch ? jsonMatch[0] : rawContent));
+      const result = JSON.parse(jsonMatch ? jsonMatch[0] : rawContent);
+      return NextResponse.json({ ...result, resumeText });
     } catch (e) {
       return NextResponse.json({ error: "Intelligence synthesis failed." }, { status: 500 });
     }

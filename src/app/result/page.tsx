@@ -35,6 +35,7 @@ interface BlueprintData {
 
 interface AnalysisResult {
   score: number;
+  resumeText?: string;
   rejectionProbability?: number;
   summary: string;
   missingSkills: string[];
@@ -70,14 +71,25 @@ interface OutreachData {
   strategic: string;
 }
 
+interface RepairData {
+  headerSuggestion: string;
+  repairs: Array<{
+    before: string;
+    after: string;
+    rationale: string;
+  }>;
+}
+
 export default function ResultPage() {
   const router = useRouter();
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
   const [blueprint, setBlueprint] = useState<BlueprintData | null>(null);
   const [outreach, setOutreach] = useState<OutreachData | null>(null);
+  const [repair, setRepair] = useState<RepairData | null>(null);
   const [isGeneratingBlueprint, setIsGeneratingBlueprint] = useState(false);
   const [isGeneratingOutreach, setIsGeneratingOutreach] = useState(false);
+  const [isRepairing, setIsRepairing] = useState(false);
 
   useEffect(() => {
     const data = sessionStorage.getItem("skillgap_result");
@@ -154,6 +166,29 @@ export default function ResultPage() {
       alert("Outreach orchestration failure.");
     } finally {
       setIsGeneratingOutreach(false);
+    }
+  };
+
+  const repairResume = async () => {
+    if (!result?.resumeText) return;
+    setIsRepairing(true);
+    setRepair(null);
+    try {
+      const response = await fetch("/api/repair", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          resumeText: result.resumeText, 
+          targetRole: result.targetRole 
+        }),
+      });
+      const data = await response.json();
+      if (data.error) throw new Error(data.error);
+      setRepair(data);
+    } catch (error) {
+      alert("Resume repair failed. The Architect is busy.");
+    } finally {
+      setIsRepairing(false);
     }
   };
 
@@ -482,6 +517,54 @@ export default function ResultPage() {
                           </div>
                         </div>
                         <button onClick={() => setOutreach(null)} className="text-[8px] uppercase font-black text-white/20 hover:text-white transition-colors">Reset Scripts</button>
+                      </div>
+                    )}
+
+                    {/* Action: AI Repair */}
+                    {!repair && (
+                      <Button 
+                        onClick={repairResume}
+                        disabled={isRepairing || !result?.resumeText}
+                        variant="outline"
+                        className="w-full py-6 rounded-2xl gap-3 border-[var(--color-neon-cyan)]/30 text-[var(--color-neon-cyan)] mt-4"
+                      >
+                        {isRepairing ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Repairing Profile...
+                          </>
+                        ) : (
+                          <>
+                            <Zap className="w-4 h-4" />
+                            Initialize AI Repair
+                          </>
+                        )}
+                      </Button>
+                    )}
+
+                    {repair && (
+                      <div className="space-y-6 pt-6 border-t border-white/5 mt-4">
+                        <div className="p-4 rounded-xl bg-[var(--color-neon-cyan)]/10 border border-[var(--color-neon-cyan)]/20">
+                          <h4 className="text-[8px] font-black uppercase text-[var(--color-neon-cyan)] tracking-widest mb-1">Header Recommendation</h4>
+                          <p className="text-[10px] text-white font-medium">{repair.headerSuggestion}</p>
+                        </div>
+                        
+                        <div className="space-y-4">
+                          {repair.repairs.map((r, i) => (
+                            <div key={i} className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <div className="w-4 h-4 rounded-full bg-red-500/20 flex items-center justify-center text-[8px] font-black text-red-500">B</div>
+                                <p className="text-[8px] text-white/30 line-through truncate max-w-[150px]">{r.before}</p>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <div className="w-4 h-4 rounded-full bg-green-500/20 flex items-center justify-center text-[8px] font-black text-green-500">A</div>
+                                <p className="text-[10px] text-white font-bold">{r.after}</p>
+                              </div>
+                              <p className="text-[8px] text-white/20 italic pl-6">{r.rationale}</p>
+                            </div>
+                          ))}
+                        </div>
+                        <button onClick={() => setRepair(null)} className="text-[8px] uppercase font-black text-white/20 hover:text-white transition-colors">Exit Repair Mode</button>
                       </div>
                     )}
                   </div>
