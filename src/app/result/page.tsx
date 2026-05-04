@@ -54,12 +54,19 @@ interface AnalysisResult {
   interviewQuestions?: InterviewQuestion[];
 }
 
+interface OutreachData {
+  bold: string;
+  strategic: string;
+}
+
 export default function ResultPage() {
   const router = useRouter();
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
   const [blueprint, setBlueprint] = useState<BlueprintData | null>(null);
+  const [outreach, setOutreach] = useState<OutreachData | null>(null);
   const [isGeneratingBlueprint, setIsGeneratingBlueprint] = useState(false);
+  const [isGeneratingOutreach, setIsGeneratingOutreach] = useState(false);
 
   useEffect(() => {
     const data = sessionStorage.getItem("skillgap_result");
@@ -117,6 +124,25 @@ export default function ResultPage() {
       alert("Failed to orchestrate blueprint. Architecture sync failure.");
     } finally {
       setIsGeneratingBlueprint(false);
+    }
+  };
+
+  const generateOutreach = async () => {
+    setIsGeneratingOutreach(true);
+    setOutreach(null);
+    try {
+      const response = await fetch("/api/outreach", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ context: result }),
+      });
+      const data = await response.json();
+      if (data.error) throw new Error(data.error);
+      setOutreach(data);
+    } catch (error) {
+      alert("Outreach orchestration failure.");
+    } finally {
+      setIsGeneratingOutreach(false);
     }
   };
 
@@ -360,6 +386,45 @@ export default function ResultPage() {
                           </>
                         )}
                       </Button>
+                    )}
+                    {/* Action: Generate Outreach */}
+                    {!outreach && (
+                      <Button 
+                        onClick={generateOutreach}
+                        disabled={isGeneratingOutreach}
+                        variant="secondary"
+                        className="w-full py-6 rounded-2xl gap-3 border-[var(--color-neon-purple)]/30 text-[var(--color-neon-purple)]"
+                      >
+                        {isGeneratingOutreach ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Drafting...
+                          </>
+                        ) : (
+                          <>
+                            <MessageSquare className="w-4 h-4" />
+                            Generate Outreach Scripts
+                          </>
+                        )}
+                      </Button>
+                    )}
+
+                    {outreach && (
+                      <div className="space-y-6 pt-6 border-t border-white/5">
+                        <div className="space-y-4">
+                          <h4 className="text-[10px] font-black uppercase text-red-500 tracking-widest">The Bold Engineer</h4>
+                          <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-[10px] text-white/70 leading-relaxed italic">
+                            {outreach.bold}
+                          </div>
+                        </div>
+                        <div className="space-y-4">
+                          <h4 className="text-[10px] font-black uppercase text-[var(--color-neon-cyan)] tracking-widest">The Strategic Learner</h4>
+                          <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-[10px] text-white/70 leading-relaxed italic">
+                            {outreach.strategic}
+                          </div>
+                        </div>
+                        <button onClick={() => setOutreach(null)} className="text-[8px] uppercase font-black text-white/20 hover:text-white transition-colors">Reset Scripts</button>
+                      </div>
                     )}
                   </div>
                 </motion.div>
