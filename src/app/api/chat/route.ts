@@ -44,7 +44,14 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await response.json();
-    return NextResponse.json({ content: data.choices[0].message.content });
+    const content = data.choices?.[0]?.message?.content;
+    
+    if (!content) {
+      console.error("Groq API returned empty content:", data);
+      return NextResponse.json({ error: "Empty response from AI" }, { status: 500 });
+    }
+
+    return NextResponse.json({ content });
   } catch (error) {
     console.error("Chat API Route Error:", error);
     return NextResponse.json({ error: "Sync failure", details: error instanceof Error ? error.message : String(error) }, { status: 500 });
