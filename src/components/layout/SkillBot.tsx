@@ -17,6 +17,7 @@ export function SkillBot() {
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [persona, setPersona] = useState<"brutal" | "supportive">("brutal");
+  const [isInterviewMode, setIsInterviewMode] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -27,10 +28,10 @@ export function SkillBot() {
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+  const handleSend = async (customMessage?: string) => {
+    const userMessage = customMessage || input.trim();
+    if (!userMessage || isLoading) return;
 
-    const userMessage = input.trim();
     setInput("");
     setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
     setIsLoading(true);
@@ -79,24 +80,44 @@ export function SkillBot() {
             {/* Header */}
             <div className="p-6 bg-gradient-to-r from-[var(--color-neon-purple)]/20 to-[var(--color-neon-blue)]/20 border-b border-white/10 flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center relative">
                   <Bot className="w-6 h-6 text-[var(--color-neon-cyan)]" />
+                  {isInterviewMode && (
+                    <motion.div 
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-black flex items-center justify-center"
+                    >
+                      <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                    </motion.div>
+                  )}
                 </div>
                 <div>
-                  <h3 className="font-bold text-white">Skill Intelligence</h3>
+                  <h3 className="font-bold text-white">
+                    {isInterviewMode ? "Shadow Interview" : "Skill Intelligence"}
+                  </h3>
                   <div className="flex items-center gap-3 mt-1">
-                    <button 
-                      onClick={() => setPersona("brutal")}
-                      className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${persona === "brutal" ? "bg-red-500/20 border-red-500 text-red-500" : "border-white/20 text-white/40 hover:border-white/40"}`}
-                    >
-                      BRUTAL
-                    </button>
-                    <button 
-                      onClick={() => setPersona("supportive")}
-                      className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${persona === "supportive" ? "bg-green-500/20 border-green-500 text-green-500" : "border-white/20 text-white/40 hover:border-white/40"}`}
-                    >
-                      SUPPORTIVE
-                    </button>
+                    {!isInterviewMode && (
+                      <>
+                        <button 
+                          onClick={() => setPersona("brutal")}
+                          className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${persona === "brutal" ? "bg-red-500/20 border-red-500 text-red-500" : "border-white/20 text-white/40 hover:border-white/40"}`}
+                        >
+                          BRUTAL
+                        </button>
+                        <button 
+                          onClick={() => setPersona("supportive")}
+                          className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${persona === "supportive" ? "bg-green-500/20 border-green-500 text-green-500" : "border-white/20 text-white/40 hover:border-white/40"}`}
+                        >
+                          SUPPORTIVE
+                        </button>
+                      </>
+                    )}
+                    {isInterviewMode && (
+                      <span className="text-[8px] font-black text-red-500 uppercase tracking-widest animate-pulse">
+                        Evaluation Active
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -111,7 +132,7 @@ export function SkillBot() {
                 <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div className={`max-w-[85%] p-4 rounded-2xl text-sm ${
                     msg.role === "user" 
-                      ? "bg-[var(--color-neon-blue)] text-white ml-4" 
+                      ? "bg-[var(--color-neon-blue)] text-white ml-4 shadow-[0_4px_15px_rgba(0,225,255,0.2)]" 
                       : "bg-white/5 border border-white/10 text-white/80 mr-4"
                   }`}>
                     {msg.content}
@@ -131,10 +152,23 @@ export function SkillBot() {
             {/* Quick Actions */}
             <div className="px-6 pb-2 bg-black flex gap-2 overflow-x-auto scrollbar-hide">
               <button 
-                onClick={() => { setInput("Challenge me with a technical question based on my gaps."); }}
-                className="whitespace-nowrap px-3 py-1.5 rounded-lg bg-[var(--color-neon-purple)]/10 border border-[var(--color-neon-purple)]/30 text-[10px] font-black uppercase text-[var(--color-neon-purple)] hover:bg-[var(--color-neon-purple)]/20 transition-colors"
+                onClick={() => { 
+                  if (isInterviewMode) {
+                    setIsInterviewMode(false);
+                    setMessages(prev => [...prev, { role: "assistant", content: "Shadow Interview terminated. Returning to diagnostic mode." }]);
+                  } else {
+                    setIsInterviewMode(true);
+                    setPersona("brutal");
+                    handleSend("Challenge me with a technical question based on my gaps.");
+                  }
+                }}
+                className={`whitespace-nowrap px-3 py-1.5 rounded-lg border text-[10px] font-black uppercase transition-colors ${
+                  isInterviewMode 
+                    ? "bg-red-500/10 border-red-500/30 text-red-500 hover:bg-red-500/20" 
+                    : "bg-[var(--color-neon-purple)]/10 border-[var(--color-neon-purple)]/30 text-[var(--color-neon-purple)] hover:bg-[var(--color-neon-purple)]/20"
+                }`}
               >
-                Start Shadow Interview
+                {isInterviewMode ? "Terminate Interview" : "Start Shadow Interview"}
               </button>
             </div>
 
