@@ -19,6 +19,9 @@ export function Navbar() {
           </Link>
 
           <nav className="hidden md:flex items-center space-x-8">
+            <Link href="/market" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
+              Market Pulse
+            </Link>
             <Link href="/analyze" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
               Product
             </Link>
