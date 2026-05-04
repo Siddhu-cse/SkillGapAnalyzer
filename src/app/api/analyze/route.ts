@@ -80,6 +80,10 @@ JSON Structure:
     "potentialIncrease": "string",
     "negotiationLeverage": "string"
   },
+  "marketSentiment": {
+    "vibe": "Bullish" | "Bearish" | "Neutral",
+    "shortReason": "string"
+  },
   "courses": [{ "title": "string", "platform": "string", "type": "string", "link": "string" }],
   "projects": [{ "title": "string", "description": "string", "techStack": ["string"], "repoType": "string" }],
   "interviewQuestions": [{ "question": "string", "context": "string" }]

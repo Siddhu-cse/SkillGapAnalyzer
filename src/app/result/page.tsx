@@ -61,6 +61,10 @@ interface AnalysisResult {
     potentialIncrease: string;
     negotiationLeverage: string;
   };
+  marketSentiment?: {
+    vibe: "Bullish" | "Bearish" | "Neutral";
+    shortReason: string;
+  };
   courses: Array<{ title: string; platform: string; type: string; link?: string }>;
   projects?: Project[];
   interviewQuestions?: InterviewQuestion[];
@@ -231,6 +235,21 @@ export default function ResultPage() {
                 <div className="text-4xl font-black flex flex-col items-center text-red-500">
                   <span>{rejectionProbability}%</span>
                   <span className="text-[8px] opacity-60 uppercase tracking-widest mt-1 text-red-400 text-center leading-tight">Rejection<br/>Risk</span>
+                </div>
+              </div>
+            )}
+            {/* Market Sentiment Widget */}
+            {result.marketSentiment && (
+              <div className="flex flex-col items-center justify-center p-6 rounded-[2rem] bg-white/5 border border-white/10 shrink-0 min-w-[140px]">
+                <div className="text-[8px] font-black uppercase tracking-widest text-white/20 mb-2">Market Vibe</div>
+                <div className={`text-xl font-black uppercase tracking-tighter mb-1 ${
+                  result.marketSentiment.vibe === "Bullish" ? "text-green-400" :
+                  result.marketSentiment.vibe === "Bearish" ? "text-red-400" : "text-yellow-400"
+                }`}>
+                  {result.marketSentiment.vibe}
+                </div>
+                <div className="text-[8px] text-white/40 text-center leading-tight max-w-[100px]">
+                  {result.marketSentiment.shortReason}
                 </div>
               </div>
             )}
