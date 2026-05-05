@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
-import { Network, Cpu, Database, Binary, Brain, Code, Shield, Zap, Sparkles, Target } from "lucide-react";
+import { Network, Cpu, Database, Binary, Brain, Code, Shield, Sparkles, Target } from "lucide-react";
 
 export function Hero() {
   const innerNodes = [

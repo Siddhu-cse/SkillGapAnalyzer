@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Brain, Cpu, Database, Network, Shield, Zap, Rocket, Search } from "lucide-react";
+import { Database, Network, Zap, Search } from "lucide-react";
 
 export default function AboutPage() {
   const phases = [
@@ -47,7 +47,7 @@ export default function AboutPage() {
             <span className="text-gradient">Architecture</span>
           </h1>
           <p className="text-xl text-white/50 leading-relaxed">
-            SkillGap isn't a simple resume scanner. It is a precision diagnostic engine built to bridge the gap between human potential and elite professional roles.
+            SkillGap isn&apos;t a simple resume scanner. It is a precision diagnostic engine built to bridge the gap between human potential and elite professional roles.
           </p>
         </motion.div>
 
@@ -83,7 +83,7 @@ export default function AboutPage() {
           className="mt-32 p-16 rounded-[4rem] glass-panel border-2 border-white/5 text-center"
         >
           <div className="max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold mb-6 italic">"The future of professional growth isn't guessing. It's engineering."</h2>
+            <h2 className="text-3xl font-bold mb-6 italic">&quot;The future of professional growth isn&apos;t guessing. It&apos;s engineering.&quot;</h2>
             <div className="w-20 h-1 bg-gradient-to-r from-[var(--color-neon-purple)] to-[var(--color-neon-blue)] mx-auto mb-6" />
             <p className="text-white/30 uppercase tracking-[0.3em] font-black text-xs">SkillGap Development Suite v1.0</p>
           </div>

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Upload, FileText, Search, Plus, X, ArrowRight, Shield, Zap, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+import { Upload, Search, Plus, X, ArrowRight, Shield, Zap, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { useRouter } from "next/navigation";
 
@@ -52,7 +52,7 @@ export default function AnalyzePage() {
       }
       sessionStorage.setItem("skillgap_result", JSON.stringify(data));
       router.push("/result");
-    } catch (err) {
+    } catch {
       alert("Diagnostic failed. The Career Architect is currently offline or the profile is unreadable.");
     } finally {
       setIsAnalyzing(false);
@@ -164,7 +164,7 @@ export default function AnalyzePage() {
               type="file" 
               onChange={handleFileUpload} 
               className="absolute inset-0 opacity-0 cursor-pointer z-20"
-              accept=".pdf"
+              accept=".pdf,.docx"
             />
             <div className="w-20 h-20 rounded-3xl bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <Upload className="w-8 h-8 text-[var(--color-neon-blue)]" />
@@ -173,7 +173,7 @@ export default function AnalyzePage() {
               {file ? file.name : "Upload Skill Profile"}
             </h3>
             <p className="text-white/30 text-sm mb-6">
-              {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : "PDF format only"}
+              {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : "PDF or DOCX format"}
             </p>
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--color-neon-cyan)] opacity-0 group-hover:opacity-100 transition-opacity">
               Drop file to initialize

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-const pdf = require("pdf-parse");
-
+// @ts-expect-error pdf-parse types
+import pdfParse from "pdf-parse";
+import * as mammoth from "mammoth";
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
@@ -17,14 +18,25 @@ export async function POST(req: NextRequest) {
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) return NextResponse.json({ error: "No API Key." }, { status: 500 });
 
-    const buffer = Buffer.from(await file.arrayBuffer());
     let resumeText = "";
     try {
-      const pdfData = await pdf(buffer);
-      resumeText = pdfData.text;
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      const fileName = file.name.toLowerCase();
+
+      if (fileName.endsWith(".docx")) {
+        const result = await mammoth.extractRawText({ buffer });
+        resumeText = result.value;
+      } else if (fileName.endsWith(".pdf")) {
+        const pdfData = await pdfParse(buffer);
+        resumeText = pdfData.text;
+      } else {
+        return NextResponse.json({ error: "Unsupported file format. Please upload a PDF or DOCX file." }, { status: 400 });
+      }
+      
     } catch (e) {
-      console.error("PDF Parsing Error:", e);
-      return NextResponse.json({ error: "PDF read failed. Ensure it is a valid text-based PDF." }, { status: 400 });
+      console.error("File Parsing Error:", e);
+      return NextResponse.json({ error: "File read failed. Ensure it is a valid text-based PDF or DOCX." }, { status: 400 });
     }
 
     const prompt = `You are 'The Brutal Career Architect'. You perform surgical-grade, unapologetic analysis with strict logical relevance. You do not sugarcoat.
@@ -115,10 +127,10 @@ Return ONLY raw JSON. Do not include any text outside the JSON.`;
       const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
       const result = JSON.parse(jsonMatch ? jsonMatch[0] : rawContent);
       return NextResponse.json({ ...result, resumeText });
-    } catch (e) {
+    } catch {
       return NextResponse.json({ error: "Intelligence synthesis failed." }, { status: 500 });
     }
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Server diagnostic error." }, { status: 500 });
   }
 }

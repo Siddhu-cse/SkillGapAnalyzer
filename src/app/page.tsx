@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Brain, Map, TrendingUp, Link as LinkIcon, Scan, Rocket, Zap, Database, Cpu, Globe, Code } from "lucide-react";
+import { Brain, Map, TrendingUp, Rocket, Zap, Database, Cpu, Globe, Code } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import Link from "next/link";
 import { Hero } from "@/components/sections/Hero";
@@ -22,7 +22,7 @@ export default function Home() {
     "Machine Learning", "Cloud Architecture", "Cybersecurity", "Data Engineering", "DevOps"
   ];
 
-  const globalSkillData: Record<string, { desc: string; importance: string; icon: any }> = {
+  const globalSkillData: Record<string, { desc: string; importance: string; icon: React.ReactNode }> = {
     "Generative AI": {
       icon: <Cpu className="w-6 h-6" />,
       desc: "Neural networks capable of creating content, code, and synthetic data.",
@@ -117,7 +117,7 @@ export default function Home() {
                       {globalSkillData[selectedGlobalSkill].desc}
                     </p>
                     <div className="p-8 rounded-3xl bg-white/5 border border-white/10 space-y-4">
-                      <div className="text-[10px] uppercase font-black text-[var(--color-neon-cyan)] tracking-[0.4em]">Architect's Strategy</div>
+                      <div className="text-[10px] uppercase font-black text-[var(--color-neon-cyan)] tracking-[0.4em]">Architect&apos;s Strategy</div>
                       <p className="text-white/60 text-lg italic leading-relaxed">
                         {globalSkillData[selectedGlobalSkill].importance}
                       </p>

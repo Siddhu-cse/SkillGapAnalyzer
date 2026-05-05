@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { TrendingUp, ArrowUpRight, ArrowDownRight, Zap, Target, Globe, Activity, Loader2 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { TrendingUp, ArrowUpRight, ArrowDownRight, Zap, Target, Globe, Activity } from "lucide-react";
+import { useState } from "react";
 
 interface TrendData {
   skill: string;
@@ -13,7 +13,7 @@ interface TrendData {
 }
 
 export default function MarketPulsePage() {
-  const [trends, setTrends] = useState<TrendData[]>([
+  const [trends] = useState<TrendData[]>([
     { skill: "Generative AI", demand: 98, growth: 120, status: "Hype", description: "Exponential demand for LLM orchestration and RAG architectures." },
     { skill: "Rust", demand: 85, growth: 45, status: "Utility", description: "Rising as the standard for high-performance systems and memory safety." },
     { skill: "System Design", demand: 92, growth: 15, status: "Foundational", description: "Critical for scaling distributed cloud-native applications." },
@@ -116,11 +116,11 @@ export default function MarketPulsePage() {
                 Strategic Shift
               </h2>
               <p className="text-sm text-white/60 leading-relaxed mb-8">
-                The market is pivoting from "Feature Completion" to "Orchestration Efficiency." Skills in AI integration and memory-safe systems are no longer optional—they are foundational.
+                The market is pivoting from &quot;Feature Completion&quot; to &quot;Orchestration Efficiency.&quot; Skills in AI integration and memory-safe systems are no longer optional—they are foundational.
               </p>
               <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-                <div className="text-[8px] font-black text-[var(--color-neon-purple)] uppercase tracking-widest mb-2">Architect's Warning</div>
-                <p className="text-xs text-white italic">"Those who do not master AI orchestration by Q4 2025 will be architecturally irrelevant."</p>
+                <div className="text-[8px] font-black text-[var(--color-neon-purple)] uppercase tracking-widest mb-2">Architect&apos;s Warning</div>
+                <p className="text-xs text-white italic">&quot;Those who do not master AI orchestration by Q4 2025 will be architecturally irrelevant.&quot;</p>
               </div>
             </div>
 
@@ -131,7 +131,7 @@ export default function MarketPulsePage() {
               </h2>
               <div className="text-5xl font-black mb-2 text-red-500">72%</div>
               <p className="text-xs text-white/40 leading-relaxed">
-                Average rejection rate for roles requiring 'System Design' when candidates lack 'Distributed Systems' verification.
+                Average rejection rate for roles requiring &apos;System Design&apos; when candidates lack &apos;Distributed Systems&apos; verification.
               </p>
             </div>
           </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Scan, Cpu, Rocket, ArrowRight, Sparkles, Binary, Layout, Target } from "lucide-react";
+import { Scan, Rocket, ArrowRight, Sparkles, Binary, Layout, Target } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 
