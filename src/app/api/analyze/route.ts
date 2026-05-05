@@ -28,15 +28,22 @@ export async function POST(req: NextRequest) {
         const result = await mammoth.extractRawText({ buffer });
         resumeText = result.value;
       } else if (fileName.endsWith(".pdf")) {
-        const pdfData = await pdfParse(buffer);
-        resumeText = pdfData.text;
+        // More robust way to call pdf-parse
+        const data = await pdfParse(buffer);
+        resumeText = data.text;
       } else {
         return NextResponse.json({ error: "Unsupported file format. Please upload a PDF or DOCX file." }, { status: 400 });
       }
+
+      if (!resumeText || resumeText.trim().length === 0) {
+        throw new Error("No text content could be extracted from the file.");
+      }
       
-    } catch (e) {
-      console.error("File Parsing Error:", e);
-      return NextResponse.json({ error: "File read failed. Ensure it is a valid text-based PDF or DOCX." }, { status: 400 });
+    } catch (err: any) {
+      console.error("File Parsing Error:", err);
+      return NextResponse.json({ 
+        error: "We couldn't read your CV properly. Please ensure it's not a scanned image and is a standard PDF or DOCX." 
+      }, { status: 400 });
     }
 
     const prompt = `You are 'The Brutal Career Architect'. You perform surgical-grade, unapologetic analysis with strict logical relevance. You do not sugarcoat.
