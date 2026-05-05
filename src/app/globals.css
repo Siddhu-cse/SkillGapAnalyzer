@@ -2,16 +2,17 @@
 
 /* Root variables */
 :root {
-  --background: #ffffff;
-  --foreground: #06030f;
-  --grid-color: rgba(0, 0, 0, 0.05);
-  --glass-bg: rgba(255, 255, 255, 0.6);
-  --glass-border: rgba(0, 0, 0, 0.1);
-  --panel-bg: rgba(255, 255, 255, 0.8);
+  --background: #fafafa;
+  --foreground: #111111;
+  --grid-color: rgba(0, 0, 0, 0.02);
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.04);
+  --panel-bg: #ffffff;
+  --panel-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.05);
   
-  --color-neon-purple: #9d00ff;
-  --color-neon-blue: #0077ff;
-  --color-neon-cyan: #00b3ad;
+  --color-neon-purple: #8b5cf6;
+  --color-neon-blue: #0ea5e9;
+  --color-neon-cyan: #06b6d4;
 }
 
 [data-theme='dark'] {
@@ -21,6 +22,7 @@
   --glass-bg: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.08);
   --panel-bg: rgba(10, 5, 25, 0.6);
+  --panel-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 
   --color-neon-purple: #b026ff;
   --color-neon-blue: #00e1ff;
@@ -96,8 +98,8 @@ body {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  transition: background 0.3s ease, border 0.3s ease;
+  box-shadow: var(--panel-shadow);
+  transition: background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Text Gradient */

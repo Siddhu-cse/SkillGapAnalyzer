@@ -16,14 +16,14 @@ export function Hero() {
     { icon: <Brain size={20} />, delay: 1, color: "text-[var(--color-neon-purple)]" },
     { icon: <Code size={20} />, delay: 3, color: "text-[var(--color-neon-blue)]" },
     { icon: <Shield size={20} />, delay: 5, color: "text-[var(--color-neon-cyan)]" },
-    { icon: <Target size={20} />, delay: 7, color: "text-white" }
+    { icon: <Target size={20} />, delay: 7, color: "text-[var(--foreground)]" }
   ];
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-[var(--background)] transition-colors duration-300">
       {/* Background glow effects */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--color-neon-purple)]/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[var(--color-neon-blue)]/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--color-neon-purple)]/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[var(--color-neon-blue)]/5 rounded-full blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -33,22 +33,22 @@ export function Hero() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6">
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6 text-[var(--foreground)]">
               Understand your{" "}
               <span className="text-gradient">true skill level</span>{" "}
               before the world does.
             </h1>
-            <p className="text-xl text-white/70 mb-8 max-w-2xl leading-relaxed">
+            <p className="text-xl text-[var(--foreground)]/70 mb-8 max-w-2xl leading-relaxed">
               Harness the power of high-precision LLMs to map your professional trajectory. Identify hidden skill gaps, predict career market shifts, and build a surgically precise roadmap to mastery.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/analyze">
-                <Button size="lg" className="w-full sm:w-auto">
+                <Button size="lg" className="w-full sm:w-auto shadow-lg">
                   Analyze Your Profile
                 </Button>
               </Link>
               <Link href="/how-it-works">
-                <Button size="lg" variant="secondary" className="w-full sm:w-auto">
+                <Button size="lg" variant="secondary" className="w-full sm:w-auto border-[var(--foreground)]/10 hover:bg-[var(--foreground)]/5 transition-colors">
                   See How It Works
                 </Button>
               </Link>
@@ -66,21 +66,21 @@ export function Hero() {
             <motion.div 
               animate={{ rotate: 360 }}
               transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-              className="absolute w-[450px] h-[450px] rounded-full border border-white/5 border-dashed"
+              className="absolute w-[450px] h-[450px] rounded-full border border-[var(--foreground)]/5 border-dashed"
             />
             <motion.div 
               animate={{ rotate: -360 }}
               transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-              className="absolute w-[350px] h-[350px] rounded-full border border-white/5 border-dashed"
+              className="absolute w-[350px] h-[350px] rounded-full border border-[var(--foreground)]/5 border-dashed"
             />
 
             {/* Center Node */}
             <motion.div
               animate={{ 
-                boxShadow: ["0 0 20px rgba(176,38,255,0.4)", "0 0 60px rgba(0,225,255,0.6)", "0 0 20px rgba(176,38,255,0.4)"] 
+                boxShadow: ["0 0 20px rgba(176,38,255,0.2)", "0 0 60px rgba(0,225,255,0.3)", "0 0 20px rgba(176,38,255,0.2)"] 
               }}
               transition={{ duration: 4, repeat: Infinity }}
-              className="w-32 h-32 rounded-full glass-panel flex items-center justify-center z-20 relative bg-[#0a0518]/90"
+              className="w-32 h-32 rounded-full glass-panel flex items-center justify-center z-20 relative bg-[var(--background)] shadow-2xl"
             >
               <Cpu className="w-12 h-12 text-[var(--color-neon-cyan)] animate-pulse" />
               {/* Outer spinning glow ring */}
@@ -103,7 +103,7 @@ export function Hero() {
                   <motion.div
                     animate={{ rotate: -360 }}
                     transition={{ duration: 25, repeat: Infinity, ease: "linear", delay: node.delay }}
-                    className="w-12 h-12 -mt-6 rounded-full glass flex items-center justify-center bg-[#0a0518]/80 border-[var(--color-neon-blue)]/20"
+                    className="w-12 h-12 -mt-6 rounded-full glass-panel flex items-center justify-center border-[var(--foreground)]/10"
                   >
                     <div className={node.color}>{node.icon}</div>
                   </motion.div>
@@ -123,7 +123,7 @@ export function Hero() {
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 35, repeat: Infinity, ease: "linear", delay: node.delay }}
-                    className="w-14 h-14 -mt-7 rounded-full glass flex items-center justify-center bg-[#0a0518]/80 border-[var(--color-neon-purple)]/20"
+                    className="w-14 h-14 -mt-7 rounded-full glass-panel flex items-center justify-center border-[var(--foreground)]/10"
                   >
                     <div className={node.color}>{node.icon}</div>
                   </motion.div>
