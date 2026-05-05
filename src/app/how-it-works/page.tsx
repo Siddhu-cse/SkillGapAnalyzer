@@ -31,17 +31,18 @@ export default function HowItWorks() {
   ];
 
   return (
-    <div className="min-h-screen py-24 relative overflow-hidden bg-black text-white">
+    <div className="min-h-screen py-24 relative overflow-hidden bg-[var(--background)] text-[var(--foreground)] transition-colors duration-300">
       {/* Hyper-Glow Background Elements */}
-      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-[var(--color-neon-purple)]/20 rounded-full blur-[150px] animate-pulse" />
-      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-[var(--color-neon-blue)]/20 rounded-full blur-[150px] animate-pulse" />
+      <div className="absolute inset-0 bg-noise pointer-events-none" />
+      <div className="absolute top-1/4 -left-20 w-96 h-96 bg-[var(--color-neon-purple)]/10 rounded-full blur-[150px] animate-pulse" />
+      <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-[var(--color-neon-blue)]/10 rounded-full blur-[150px] animate-pulse" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-24">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6"
+            className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 mb-6"
           >
             <Sparkles className="w-4 h-4 text-[var(--color-neon-cyan)]" />
             <span className="text-xs font-black uppercase tracking-widest text-[var(--color-neon-cyan)]">The Next Era of Growth</span>
@@ -58,7 +59,7 @@ export default function HowItWorks() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="text-xl text-white/50 max-w-2xl mx-auto leading-relaxed"
+            className="text-xl text-[var(--foreground)]/50 max-w-2xl mx-auto leading-relaxed"
           >
             Our architecture replaces guesswork with high-fidelity diagnostics. Explore the three-step journey to mastery.
           </motion.p>
@@ -79,15 +80,15 @@ export default function HowItWorks() {
                 style={{ backgroundColor: step.glow }}
               />
               
-              <div className="relative glass-panel p-10 h-full rounded-[3rem] border border-white/10 hover:border-white/20 transition-all flex flex-col items-center text-center">
-                <div className="w-20 h-20 rounded-2xl bg-white/5 flex items-center justify-center mb-10 group-hover:scale-110 transition-transform duration-500">
+              <div className="relative glass-panel p-10 h-full rounded-[3rem] border border-[var(--foreground)]/10 hover:border-[var(--foreground)]/20 transition-all flex flex-col items-center text-center">
+                <div className="w-20 h-20 rounded-2xl bg-[var(--foreground)]/5 flex items-center justify-center mb-10 group-hover:scale-110 transition-transform duration-500">
                   {step.icon}
                 </div>
                 <h2 className="text-2xl font-black mb-6 uppercase tracking-tight">{step.title}</h2>
-                <p className="text-white/40 leading-relaxed mb-8 flex-1">
+                <p className="text-[var(--foreground)]/40 leading-relaxed mb-8 flex-1">
                   {step.desc}
                 </p>
-                <div className="w-12 h-1 bg-white/10 rounded-full group-hover:bg-[var(--color-neon-cyan)] transition-colors" />
+                <div className="w-12 h-1 bg-[var(--foreground)]/10 rounded-full group-hover:bg-[var(--color-neon-cyan)] transition-colors" />
               </div>
             </motion.div>
           ))}
@@ -100,11 +101,11 @@ export default function HowItWorks() {
           transition={{ delay: 0.5 }}
           className="mt-32 relative group"
         >
-          <div className="absolute -inset-1 bg-gradient-to-r from-[var(--color-neon-purple)] to-[var(--color-neon-blue)] rounded-[4rem] blur-2xl opacity-20" />
-          <div className="relative glass-panel p-16 rounded-[4rem] border border-white/5 flex flex-col md:flex-row items-center justify-between gap-12 overflow-hidden">
+          <div className="absolute -inset-1 bg-gradient-to-r from-[var(--color-neon-purple)] to-[var(--color-neon-blue)] rounded-[4rem] blur-2xl opacity-10" />
+          <div className="relative glass-panel p-16 rounded-[4rem] border border-[var(--foreground)]/5 flex flex-col md:flex-row items-center justify-between gap-12 overflow-hidden">
             <div className="max-w-xl relative z-10">
               <h2 className="text-4xl font-black mb-6 uppercase tracking-tighter">Ready to <span className="text-gradient">Architect</span> Your Future?</h2>
-              <p className="text-white/60 text-lg mb-10 leading-relaxed">
+              <p className="text-[var(--foreground)]/60 text-lg mb-10 leading-relaxed">
                 Stop guessing your skill level. Start your precision diagnostic now and build your bridge to mastery.
               </p>
               <Link href="/analyze">
@@ -116,7 +117,7 @@ export default function HowItWorks() {
             </div>
             <div className="relative w-full md:w-[400px] h-[300px] flex items-center justify-center">
               {/* Abstract Visual Career Map */}
-              <div className="absolute inset-0 bg-grid-pattern opacity-20" />
+              <div className="absolute inset-0 bg-grid-pattern opacity-10" />
               <div className="relative">
                 <Layout className="w-32 h-32 text-[var(--color-neon-blue)]/20 animate-pulse" />
                 <Target className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 text-[var(--color-neon-cyan)]" />

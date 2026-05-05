@@ -2,17 +2,20 @@
 
 /* Root variables */
 :root {
-  --background: #fafafa;
-  --foreground: #111111;
-  --grid-color: rgba(0, 0, 0, 0.02);
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(0, 0, 0, 0.04);
+  --background: #fcfcfc;
+  --foreground: #0f172a;
+  --grid-color: rgba(15, 23, 42, 0.02);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(15, 23, 42, 0.06);
   --panel-bg: #ffffff;
-  --panel-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.05);
+  --panel-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.05),
+    0 4px 6px -2px rgba(0, 0, 0, 0.025),
+    0 0 0 1px rgba(0, 0, 0, 0.01);
   
-  --color-neon-purple: #8b5cf6;
-  --color-neon-blue: #0ea5e9;
-  --color-neon-cyan: #06b6d4;
+  --color-neon-purple: #7c3aed;
+  --color-neon-blue: #0284c7;
+  --color-neon-cyan: #0891b2;
 }
 
 [data-theme='dark'] {
@@ -83,23 +86,41 @@ body {
   transition: background-image 0.3s ease;
 }
 
+.bg-noise {
+  background-image: url("https://www.transparenttextures.com/patterns/cubes.png");
+  opacity: 0.015;
+}
+
+[data-theme='dark'] .bg-noise {
+  opacity: 0.05;
+}
+
 /* Glassmorphism Utilities */
 .glass {
   background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-  transition: background 0.3s ease, border 0.3s ease;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-panel {
   background: var(--panel-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
   border: 1px solid var(--glass-border);
   box-shadow: var(--panel-shadow);
-  transition: background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.08),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
 /* Text Gradient */

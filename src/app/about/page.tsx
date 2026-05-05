@@ -32,8 +32,9 @@ export default function AboutPage() {
   ];
 
   return (
-    <div className="min-h-screen py-24 relative overflow-hidden bg-black text-white">
+    <div className="min-h-screen py-24 relative overflow-hidden bg-[var(--background)] text-[var(--foreground)] transition-colors duration-300">
       {/* Visual background elements */}
+      <div className="absolute inset-0 bg-noise pointer-events-none" />
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-[var(--color-neon-blue)]/5 rounded-full blur-[150px] pointer-events-none" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -46,7 +47,7 @@ export default function AboutPage() {
             Intelligence <br/>
             <span className="text-gradient">Architecture</span>
           </h1>
-          <p className="text-xl text-white/50 leading-relaxed">
+          <p className="text-xl text-[var(--foreground)]/50 leading-relaxed">
             SkillGap isn&apos;t a simple resume scanner. It is a precision diagnostic engine built to bridge the gap between human potential and elite professional roles.
           </p>
         </motion.div>
@@ -58,18 +59,18 @@ export default function AboutPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: i * 0.1 }}
-              className="glass-panel p-10 rounded-[3rem] border border-white/5 hover:border-[var(--color-neon-cyan)]/20 transition-all group"
+              className="glass-panel p-10 rounded-[3rem] border border-[var(--foreground)]/5 hover:border-[var(--color-neon-cyan)]/20 transition-all group"
             >
               <div className="flex items-center justify-between mb-8">
-                <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center">
+                <div className="w-14 h-14 rounded-2xl bg-[var(--foreground)]/5 flex items-center justify-center">
                   {phase.icon}
                 </div>
-                <div className="text-5xl font-black text-white/5 group-hover:text-white/10 transition-colors font-mono">
+                <div className="text-5xl font-black text-[var(--foreground)]/5 group-hover:text-[var(--foreground)]/10 transition-colors font-mono">
                   {phase.id}
                 </div>
               </div>
               <h2 className="text-2xl font-bold mb-4">{phase.title}</h2>
-              <p className="text-white/40 leading-relaxed">
+              <p className="text-[var(--foreground)]/40 leading-relaxed">
                 {phase.desc}
               </p>
             </motion.div>
@@ -80,12 +81,12 @@ export default function AboutPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="mt-32 p-16 rounded-[4rem] glass-panel border-2 border-white/5 text-center"
+          className="mt-32 p-16 rounded-[4rem] glass-panel border-2 border-[var(--foreground)]/5 text-center"
         >
           <div className="max-w-2xl mx-auto">
             <h2 className="text-3xl font-bold mb-6 italic">&quot;The future of professional growth isn&apos;t guessing. It&apos;s engineering.&quot;</h2>
             <div className="w-20 h-1 bg-gradient-to-r from-[var(--color-neon-purple)] to-[var(--color-neon-blue)] mx-auto mb-6" />
-            <p className="text-white/30 uppercase tracking-[0.3em] font-black text-xs">SkillGap Development Suite v1.0</p>
+            <p className="text-[var(--foreground)]/30 uppercase tracking-[0.3em] font-black text-xs">SkillGap Development Suite v1.0</p>
           </div>
         </motion.div>
       </div>

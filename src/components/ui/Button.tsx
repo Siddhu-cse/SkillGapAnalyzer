@@ -15,10 +15,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       primary:
         "bg-gradient-to-r from-[var(--color-neon-purple)] to-[var(--color-neon-blue)] text-white shadow-[0_0_15px_rgba(0,225,255,0.4)] hover:shadow-[0_0_25px_rgba(0,225,255,0.6)] border-none",
       secondary:
-        "bg-white/5 text-white border border-white/10 hover:bg-white/10 hover:border-white/20 backdrop-blur-sm",
+        "bg-[var(--foreground)]/5 text-[var(--foreground)] border border-[var(--foreground)]/10 hover:bg-[var(--foreground)]/10 hover:border-[var(--foreground)]/20 backdrop-blur-sm",
       outline:
         "bg-transparent text-[var(--color-neon-blue)] border border-[var(--color-neon-blue)] hover:bg-[var(--color-neon-blue)]/10 shadow-[0_0_10px_rgba(0,225,255,0.2)]",
-      ghost: "bg-transparent text-white/70 hover:text-white hover:bg-white/5",
+      ghost: "bg-transparent text-[var(--foreground)]/70 hover:text-[var(--foreground)] hover:bg-[var(--foreground)]/5",
     };
 
     const sizes = {

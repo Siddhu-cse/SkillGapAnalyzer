@@ -117,7 +117,8 @@ export default function ResultPage() {
 
   if (!result) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black">
+      <div className="min-h-screen flex items-center justify-center bg-[var(--background)]">
+        <div className="absolute inset-0 bg-noise pointer-events-none" />
         <Loader2 className="w-12 h-12 animate-spin text-[var(--color-neon-blue)]" />
       </div>
     );
@@ -204,24 +205,25 @@ export default function ResultPage() {
   const currentDetail = selectedSkill ? getSkillDetail(selectedSkill) : null;
 
   return (
-    <div className="min-h-screen py-12 relative overflow-hidden bg-black text-white">
+    <div className="min-h-screen py-12 relative overflow-hidden bg-[var(--background)] text-[var(--foreground)] transition-colors duration-300">
+      <div className="absolute inset-0 bg-noise pointer-events-none" />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
         
         {/* Market Benchmark Header */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-panel p-10 rounded-[3rem] flex flex-col md:flex-row items-center justify-between gap-10 border-b-2 border-white/5 bg-gradient-to-br from-white/[0.02] to-transparent">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-panel p-10 rounded-[3rem] flex flex-col md:flex-row items-center justify-between gap-10 border-b-2 border-[var(--foreground)]/5 bg-gradient-to-br from-[var(--foreground)]/[0.02] to-transparent">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-4">
               <Activity className="w-4 h-4 text-[var(--color-neon-cyan)] animate-pulse" />
               <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[var(--color-neon-cyan)]">Career Architecture Blueprint</span>
             </div>
             <h1 className="text-4xl font-black mb-4 uppercase tracking-tighter">Market <span className="text-gradient">Benchmark</span> Result</h1>
-            <p className="text-white/60 text-xl italic font-medium leading-relaxed">&quot;{summary}&quot;</p>
+            <p className="text-[var(--foreground)]/60 text-xl italic font-medium leading-relaxed">&quot;{summary}&quot;</p>
           </div>
           <div className="flex flex-col md:flex-row gap-8 items-center">
             {/* Score Gauge */}
             <div className="relative w-32 h-32 flex items-center justify-center shrink-0">
               <svg className="absolute w-full h-full transform -rotate-90">
-                <circle cx="64" cy="64" r="56" stroke="rgba(255,255,255,0.05)" strokeWidth="10" fill="none" />
+                <circle cx="64" cy="64" r="56" stroke="currentColor" className="text-[var(--foreground)]/5" strokeWidth="10" fill="none" />
                 <motion.circle cx="64" cy="64" r="56" stroke="var(--color-neon-cyan)" strokeWidth="10" fill="none" strokeDasharray="351.8" initial={{ strokeDashoffset: 351.8 }} animate={{ strokeDashoffset: 351.8 - (351.8 * score) / 100 }} transition={{ duration: 2 }} strokeLinecap="round" />
               </svg>
               <div className="text-4xl font-black flex flex-col items-center">
@@ -245,15 +247,15 @@ export default function ResultPage() {
             )}
             {/* Market Sentiment Widget */}
             {result.marketSentiment && (
-              <div className="flex flex-col items-center justify-center p-6 rounded-[2rem] bg-white/5 border border-white/10 shrink-0 min-w-[140px]">
-                <div className="text-[8px] font-black uppercase tracking-widest text-white/20 mb-2">Market Vibe</div>
+              <div className="flex flex-col items-center justify-center p-6 rounded-[2rem] bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 shrink-0 min-w-[140px]">
+                <div className="text-[8px] font-black uppercase tracking-widest text-[var(--foreground)]/20 mb-2">Market Vibe</div>
                 <div className={`text-xl font-black uppercase tracking-tighter mb-1 ${
                   result.marketSentiment.vibe === "Bullish" ? "text-green-400" :
                   result.marketSentiment.vibe === "Bearish" ? "text-red-400" : "text-yellow-400"
                 }`}>
                   {result.marketSentiment.vibe}
                 </div>
-                <div className="text-[8px] text-white/40 text-center leading-tight max-w-[100px]">
+                <div className="text-[8px] text-[var(--foreground)]/40 text-center leading-tight max-w-[100px]">
                   {result.marketSentiment.shortReason}
                 </div>
               </div>
@@ -279,7 +281,7 @@ export default function ResultPage() {
                   </h3>
                   <div className="flex flex-wrap gap-3">
                     {missingSkills.map(s => (
-                      <button key={s} onClick={() => { setSelectedSkill(s); setBlueprint(null); }} className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${selectedSkill === s ? "bg-red-500/20 border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.2)]" : "bg-white/5 border-white/10 text-white/50 hover:border-red-500/30"}`}>{s}</button>
+                      <button key={s} onClick={() => { setSelectedSkill(s); setBlueprint(null); }} className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${selectedSkill === s ? "bg-red-500/20 border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.2)]" : "bg-[var(--foreground)]/5 border-[var(--foreground)]/10 text-[var(--foreground)]/50 hover:border-red-500/30"}`}>{s}</button>
                     ))}
                   </div>
                 </div>
@@ -289,7 +291,7 @@ export default function ResultPage() {
                   </h3>
                   <div className="flex flex-wrap gap-3">
                     {presentSkills.map(s => (
-                      <button key={s} onClick={() => { setSelectedSkill(s); setBlueprint(null); }} className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${selectedSkill === s ? "bg-green-500/20 border-green-500 shadow-[0_0_15px_rgba(34,197,94,0.2)]" : "bg-white/5 border-white/10 text-white/50 hover:border-green-500/30"}`}>{s}</button>
+                      <button key={s} onClick={() => { setSelectedSkill(s); setBlueprint(null); }} className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all ${selectedSkill === s ? "bg-green-500/20 border-green-500 shadow-[0_0_15px_rgba(34,197,94,0.2)]" : "bg-[var(--foreground)]/5 border-[var(--foreground)]/10 text-[var(--foreground)]/50 hover:border-green-500/30"}`}>{s}</button>
                     ))}
                   </div>
                 </div>
@@ -307,14 +309,14 @@ export default function ResultPage() {
                     <Sparkles className="w-4 h-4" /> Orchestrated Blueprint
                   </div>
                   <h3 className="text-3xl font-black mb-2 uppercase tracking-tighter">{blueprint.title}</h3>
-                  <p className="text-lg text-white/60 mb-10 italic">&quot;{blueprint.tagline}&quot;</p>
+                  <p className="text-lg text-[var(--foreground)]/60 mb-10 italic">&quot;{blueprint.tagline}&quot;</p>
                   
                   <div className="grid md:grid-cols-2 gap-10 mb-10">
                     <div className="space-y-4">
-                      <h4 className="text-[10px] font-black uppercase text-white/40 tracking-widest">Week 1: Foundations</h4>
+                      <h4 className="text-[10px] font-black uppercase text-[var(--foreground)]/40 tracking-widest">Week 1: Foundations</h4>
                       <ul className="space-y-3">
                         {blueprint.week1.map((item, i) => (
-                          <li key={i} className="text-sm text-white/80 flex gap-3">
+                          <li key={i} className="text-sm text-[var(--foreground)]/80 flex gap-3">
                             <span className="text-[var(--color-neon-cyan)] font-black">0{i+1}</span>
                             {item}
                           </li>
@@ -322,10 +324,10 @@ export default function ResultPage() {
                       </ul>
                     </div>
                     <div className="space-y-4">
-                      <h4 className="text-[10px] font-black uppercase text-white/40 tracking-widest">Week 2: Execution</h4>
+                      <h4 className="text-[10px] font-black uppercase text-[var(--foreground)]/40 tracking-widest">Week 2: Execution</h4>
                       <ul className="space-y-3">
                         {blueprint.week2.map((item, i) => (
-                          <li key={i} className="text-sm text-white/80 flex gap-3">
+                          <li key={i} className="text-sm text-[var(--foreground)]/80 flex gap-3">
                             <span className="text-[var(--color-neon-purple)] font-black">0{i+1}</span>
                             {item}
                           </li>
@@ -334,20 +336,20 @@ export default function ResultPage() {
                     </div>
                   </div>
 
-                  <div className="p-8 rounded-3xl bg-black/40 border border-white/5 space-y-6">
+                  <div className="p-8 rounded-3xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 space-y-6">
                     <div className="flex flex-col md:flex-row justify-between gap-6">
                       <div className="flex-1">
                         <h4 className="text-[10px] font-black uppercase text-[var(--color-neon-cyan)] tracking-widest mb-3">The Killer Feature</h4>
-                        <p className="text-sm text-white/90 font-medium">{blueprint.killerFeature}</p>
+                        <p className="text-sm text-[var(--foreground)]/90 font-medium">{blueprint.killerFeature}</p>
                       </div>
                       <div className="flex-1">
                         <h4 className="text-[10px] font-black uppercase text-[var(--color-neon-purple)] tracking-widest mb-3">Readme Strategy</h4>
-                        <p className="text-sm text-white/70 italic">{blueprint.readmeHook}</p>
+                        <p className="text-sm text-[var(--foreground)]/70 italic">{blueprint.readmeHook}</p>
                       </div>
                     </div>
                     <div className="flex flex-wrap gap-2 pt-4 border-t border-white/5">
                       {blueprint.techStack.map(tech => (
-                        <span key={tech} className="px-3 py-1 rounded-lg bg-white/5 border border-white/10 text-[10px] font-bold text-white/40 uppercase tracking-widest">{tech}</span>
+                        <span key={tech} className="px-3 py-1 rounded-lg bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[10px] font-bold text-[var(--foreground)]/40 uppercase tracking-widest">{tech}</span>
                       ))}
                     </div>
                   </div>
@@ -369,18 +371,18 @@ export default function ResultPage() {
                   
                   <div className="space-y-6">
                     <div>
-                      <div className="text-[10px] font-black uppercase text-white/40 tracking-widest mb-1">Target Milestone</div>
-                      <div className="text-2xl font-black text-white">{result.promotionRoadmap.nextLevel}</div>
+                      <div className="text-[10px] font-black uppercase text-[var(--foreground)]/40 tracking-widest mb-1">Target Milestone</div>
+                      <div className="text-2xl font-black text-[var(--foreground)]">{result.promotionRoadmap.nextLevel}</div>
                     </div>
                     
                     <div>
-                      <div className="text-[10px] font-black uppercase text-white/40 tracking-widest mb-1">Estimated Timeline</div>
+                      <div className="text-[10px] font-black uppercase text-[var(--foreground)]/40 tracking-widest mb-1">Estimated Timeline</div>
                       <div className="text-xl font-bold text-[var(--color-neon-cyan)]">{result.promotionRoadmap.yearsEstimate}</div>
                     </div>
 
-                    <div className="p-6 rounded-2xl bg-black/40 border border-white/5">
-                      <div className="text-[10px] font-black uppercase text-red-400 tracking-widest mb-2">Critical Growth Gap</div>
-                      <p className="text-sm text-white/70 italic leading-relaxed">&quot;{result.promotionRoadmap.criticalGap}&quot;</p>
+                    <div className="p-6 rounded-2xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10">
+                      <div className="text-[10px] font-black uppercase text-red-500 tracking-widest mb-2">Critical Growth Gap</div>
+                      <p className="text-sm text-[var(--foreground)]/70 italic leading-relaxed">&quot;{result.promotionRoadmap.criticalGap}&quot;</p>
                     </div>
 
                     <div className="flex flex-wrap gap-2">
@@ -402,8 +404,8 @@ export default function ResultPage() {
 
                   <div className="space-y-8">
                     <div>
-                      <div className="text-[10px] font-black uppercase text-white/40 tracking-widest mb-2">Market Benchmark (Current Role)</div>
-                      <div className="text-3xl font-black text-white">{result.salaryIntelligence.currentMarketRange}</div>
+                      <div className="text-[10px] font-black uppercase text-[var(--foreground)]/40 tracking-widest mb-2">Market Benchmark (Current Role)</div>
+                      <div className="text-3xl font-black text-[var(--foreground)]">{result.salaryIntelligence.currentMarketRange}</div>
                     </div>
 
                     <div className="relative pt-2">
@@ -411,7 +413,7 @@ export default function ResultPage() {
                         <div className="text-[10px] font-black uppercase text-green-400 tracking-widest">Potential Upside</div>
                         <div className="text-2xl font-black text-green-400">+{result.salaryIntelligence.potentialIncrease}</div>
                       </div>
-                      <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+                      <div className="h-2 w-full bg-[var(--foreground)]/5 rounded-full overflow-hidden">
                         <motion.div 
                           initial={{ width: 0 }}
                           animate={{ width: "65%" }}
@@ -420,9 +422,9 @@ export default function ResultPage() {
                       </div>
                     </div>
 
-                    <div className="p-6 rounded-2xl bg-black/40 border border-white/5">
+                    <div className="p-6 rounded-2xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10">
                       <div className="text-[10px] font-black uppercase text-[var(--color-neon-cyan)] tracking-widest mb-2">Negotiation Leverage</div>
-                      <p className="text-sm text-white/70 leading-relaxed">{result.salaryIntelligence.negotiationLeverage}</p>
+                      <p className="text-sm text-[var(--foreground)]/70 leading-relaxed">{result.salaryIntelligence.negotiationLeverage}</p>
                     </div>
                   </div>
                 </div>
@@ -430,7 +432,7 @@ export default function ResultPage() {
             )}
 
             {/* The Brutal Audit Certificate */}
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} className="glass-panel p-16 rounded-[4rem] border-4 border-double border-white/10 text-center relative overflow-hidden bg-gradient-to-b from-white/[0.03] to-transparent">
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} className="glass-panel p-16 rounded-[4rem] border-4 border-double border-[var(--foreground)]/10 text-center relative overflow-hidden bg-gradient-to-b from-[var(--foreground)]/[0.03] to-transparent">
               <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 pointer-events-none" />
               <div className="relative z-10">
                 <div className="flex justify-center mb-10">
@@ -441,17 +443,17 @@ export default function ResultPage() {
                 </div>
                 <h2 className="text-sm font-black uppercase tracking-[0.8em] text-[var(--color-neon-cyan)] mb-6">Official Career Diagnostic</h2>
                 <h3 className="text-5xl md:text-7xl font-black mb-8 uppercase tracking-tighter">Certified <span className="text-gradient">Benchmark</span></h3>
-                <p className="text-white/40 text-lg max-w-2xl mx-auto mb-12 leading-relaxed italic">
+                <p className="text-[var(--foreground)]/40 text-lg max-w-2xl mx-auto mb-12 leading-relaxed italic">
                   &quot;This profile has been surgically analyzed by the Brutal Career Architect. Gaps have been exposed. Potential has been quantified. There is no longer any room for ignorance.&quot;
                 </p>
                 <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-                  <div className="text-left px-8 py-4 border-l border-white/10">
-                    <div className="text-[10px] font-black uppercase text-white/20 tracking-widest">Diagnostic ID</div>
-                    <div className="text-xs font-mono text-white/60">{diagnosticId}</div>
+                  <div className="text-left px-8 py-4 border-l border-[var(--foreground)]/10">
+                    <div className="text-[10px] font-black uppercase text-[var(--foreground)]/20 tracking-widest">Diagnostic ID</div>
+                    <div className="text-xs font-mono text-[var(--foreground)]/60">{diagnosticId}</div>
                   </div>
-                  <div className="text-left px-8 py-4 border-l border-white/10">
-                    <div className="text-[10px] font-black uppercase text-white/20 tracking-widest">Verification Date</div>
-                    <div className="text-xs font-mono text-white/60">{verificationDate}</div>
+                  <div className="text-left px-8 py-4 border-l border-[var(--foreground)]/10">
+                    <div className="text-[10px] font-black uppercase text-[var(--foreground)]/20 tracking-widest">Verification Date</div>
+                    <div className="text-xs font-mono text-[var(--foreground)]/60">{verificationDate}</div>
                   </div>
                   <Button onClick={() => window.print()} variant="primary" size="lg" className="px-12 rounded-2xl shadow-[0_0_30px_rgba(0,225,255,0.3)]">
                     Download Audit Report
@@ -467,17 +469,17 @@ export default function ResultPage() {
                 </h2>
                 <div className="grid gap-6">
                   {projects.map((project, i) => (
-                    <div key={i} className="p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-[var(--color-neon-blue)]/50 transition-colors">
+                    <div key={i} className="p-6 rounded-2xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 hover:border-[var(--color-neon-blue)]/50 transition-colors">
                       <div className="flex justify-between items-start mb-4">
-                        <h4 className="text-xl font-bold text-white">{project.title}</h4>
+                        <h4 className="text-xl font-bold text-[var(--foreground)]">{project.title}</h4>
                         <span className="px-3 py-1 rounded-full bg-[var(--color-neon-blue)]/20 text-[var(--color-neon-blue)] text-[10px] font-black uppercase tracking-widest border border-[var(--color-neon-blue)]/30">
                           {project.repoType}
                         </span>
                       </div>
-                      <p className="text-sm text-white/60 mb-6 leading-relaxed">{project.description}</p>
+                      <p className="text-sm text-[var(--foreground)]/60 mb-6 leading-relaxed">{project.description}</p>
                       <div className="flex flex-wrap gap-2">
                         {project.techStack.map((tech, idx) => (
-                          <span key={idx} className="px-2 py-1 bg-white/10 rounded text-[10px] font-bold text-white/80">
+                          <span key={idx} className="px-2 py-1 bg-[var(--foreground)]/10 rounded text-[10px] font-bold text-[var(--foreground)]/80">
                             {tech}
                           </span>
                         ))}
@@ -497,15 +499,15 @@ export default function ResultPage() {
                   <h2 className="text-2xl font-black mb-6 uppercase text-gradient">{selectedSkill}</h2>
                   <div className="space-y-8">
                     <div>
-                      <h4 className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-3">Architect Insight</h4>
-                      <p className="text-sm text-white/80 leading-relaxed">{currentDetail.explanation}</p>
+                      <h4 className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-[0.2em] mb-3">Architect Insight</h4>
+                      <p className="text-sm text-[var(--foreground)]/80 leading-relaxed">{currentDetail.explanation}</p>
                     </div>
                     <div>
-                      <h4 className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em] mb-4">Mastery Resources</h4>
+                      <h4 className="text-[10px] font-black text-[var(--foreground)]/40 uppercase tracking-[0.2em] mb-4">Mastery Resources</h4>
                       <div className="space-y-2">
                         {currentDetail.resources.map((r, idx) => (
-                          <a key={idx} href={r.url.startsWith('http') ? r.url : `https://${r.url}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group">
-                            <span className="text-xs font-bold text-white/60 group-hover:text-white">{r.name}</span>
+                          <a key={idx} href={r.url.startsWith('http') ? r.url : `https://${r.url}`} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 rounded-xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 hover:bg-[var(--foreground)]/10 transition-colors group">
+                            <span className="text-xs font-bold text-[var(--foreground)]/60 group-hover:text-[var(--foreground)]">{r.name}</span>
                             <ExternalLink className="w-3 h-3 opacity-20 group-hover:opacity-100" />
                           </a>
                         ))}
@@ -556,20 +558,20 @@ export default function ResultPage() {
                     )}
 
                     {outreach && (
-                      <div className="space-y-6 pt-6 border-t border-white/5">
+                      <div className="space-y-6 pt-6 border-t border-[var(--foreground)]/5">
                         <div className="space-y-4">
                           <h4 className="text-[10px] font-black uppercase text-red-500 tracking-widest">The Bold Engineer</h4>
-                          <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-[10px] text-white/70 leading-relaxed italic">
+                          <div className="p-4 rounded-xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[10px] text-[var(--foreground)]/70 leading-relaxed italic">
                             {outreach.bold}
                           </div>
                         </div>
                         <div className="space-y-4">
                           <h4 className="text-[10px] font-black uppercase text-[var(--color-neon-cyan)] tracking-widest">The Strategic Learner</h4>
-                          <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-[10px] text-white/70 leading-relaxed italic">
+                          <div className="p-4 rounded-xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[10px] text-[var(--foreground)]/70 leading-relaxed italic">
                             {outreach.strategic}
                           </div>
                         </div>
-                        <button onClick={() => setOutreach(null)} className="text-[8px] uppercase font-black text-white/20 hover:text-white transition-colors">Reset Scripts</button>
+                        <button onClick={() => setOutreach(null)} className="text-[8px] uppercase font-black text-[var(--foreground)]/20 hover:text-[var(--foreground)] transition-colors">Reset Scripts</button>
                       </div>
                     )}
 
@@ -596,10 +598,10 @@ export default function ResultPage() {
                     )}
 
                     {repair && (
-                      <div className="space-y-6 pt-6 border-t border-white/5 mt-4">
+                      <div className="space-y-6 pt-6 border-t border-[var(--foreground)]/5 mt-4">
                         <div className="p-4 rounded-xl bg-[var(--color-neon-cyan)]/10 border border-[var(--color-neon-cyan)]/20">
                           <h4 className="text-[8px] font-black uppercase text-[var(--color-neon-cyan)] tracking-widest mb-1">Header Recommendation</h4>
-                          <p className="text-[10px] text-white font-medium">{repair.headerSuggestion}</p>
+                          <p className="text-[10px] text-[var(--foreground)] font-medium">{repair.headerSuggestion}</p>
                         </div>
                         
                         <div className="space-y-4">
@@ -607,17 +609,17 @@ export default function ResultPage() {
                             <div key={i} className="space-y-2">
                               <div className="flex items-center gap-2">
                                 <div className="w-4 h-4 rounded-full bg-red-500/20 flex items-center justify-center text-[8px] font-black text-red-500">B</div>
-                                <p className="text-[8px] text-white/30 line-through truncate max-w-[150px]">{r.before}</p>
+                                <p className="text-[8px] text-[var(--foreground)]/30 line-through truncate max-w-[150px]">{r.before}</p>
                               </div>
                               <div className="flex items-center gap-2">
                                 <div className="w-4 h-4 rounded-full bg-green-500/20 flex items-center justify-center text-[8px] font-black text-green-500">A</div>
-                                <p className="text-[10px] text-white font-bold">{r.after}</p>
+                                <p className="text-[10px] text-[var(--foreground)] font-bold">{r.after}</p>
                               </div>
-                              <p className="text-[8px] text-white/20 italic pl-6">{r.rationale}</p>
+                              <p className="text-[8px] text-[var(--foreground)]/20 italic pl-6">{r.rationale}</p>
                             </div>
                           ))}
                         </div>
-                        <button onClick={() => setRepair(null)} className="text-[8px] uppercase font-black text-white/20 hover:text-white transition-colors">Exit Repair Mode</button>
+                        <button onClick={() => setRepair(null)} className="text-[8px] uppercase font-black text-[var(--foreground)]/20 hover:text-[var(--foreground)] transition-colors">Exit Repair Mode</button>
                       </div>
                     )}
                   </div>
@@ -626,7 +628,7 @@ export default function ResultPage() {
             </AnimatePresence>
 
             <div className="glass-panel p-8 rounded-[2.5rem]">
-              <h2 className="text-xl font-bold mb-6 flex items-center gap-3 text-white/60">
+              <h2 className="text-xl font-bold mb-6 flex items-center gap-3 text-[var(--foreground)]/60">
                 <TrendingUp className="w-5 h-5" />
                 Market Pulse
               </h2>
@@ -639,8 +641,8 @@ export default function ResultPage() {
                   if (pulse === "Foundational") pulseColor = "text-purple-400 border-purple-400/30 bg-purple-400/10";
 
                   return (
-                    <button key={s} onClick={() => setSelectedSkill(s)} className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10 hover:border-white/30 transition-all text-left">
-                      <span className="text-xs font-bold text-white/80">{s}</span>
+                    <button key={s} onClick={() => setSelectedSkill(s)} className="flex items-center justify-between p-3 rounded-xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 hover:border-[var(--foreground)]/30 transition-all text-left">
+                      <span className="text-xs font-bold text-[var(--foreground)]/80">{s}</span>
                       {pulse && (
                         <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-1 rounded border ${pulseColor}`}>
                           {pulse}
@@ -656,25 +658,25 @@ export default function ResultPage() {
 
         {/* Mock Interview Section */}
         {interviewQuestions && interviewQuestions.length > 0 && (
-          <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="glass-panel p-12 rounded-[3.5rem] bg-gradient-to-br from-white/[0.02] to-transparent border border-white/10">
+          <motion.div initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} className="glass-panel p-12 rounded-[3.5rem] bg-gradient-to-br from-[var(--foreground)]/[0.02] to-transparent border border-[var(--foreground)]/10">
             <div className="flex items-center gap-4 mb-10">
               <div className="w-14 h-14 rounded-2xl bg-[var(--color-neon-blue)]/20 flex items-center justify-center">
                 <MessageSquare className="w-8 h-8 text-[var(--color-neon-blue)]" />
               </div>
               <div>
                 <h2 className="text-3xl font-black uppercase tracking-tighter">Mock Interview <span className="text-gradient">Intelligence</span></h2>
-                <p className="text-white/40">Surgical preparation for your target role</p>
+                <p className="text-[var(--foreground)]/40">Surgical preparation for your target role</p>
               </div>
             </div>
 
             <div className="grid md:grid-cols-2 gap-8">
               {interviewQuestions.map((iq, i) => (
-                <div key={i} className="p-8 rounded-[2rem] bg-white/5 border border-white/10 hover:bg-white/[0.08] transition-all group">
+                <div key={i} className="p-8 rounded-[2rem] bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 hover:bg-[var(--foreground)]/[0.08] transition-all group">
                   <div className="text-[10px] font-black text-[var(--color-neon-cyan)] uppercase tracking-[0.3em] mb-4">Benchmark Question 0{i + 1}</div>
-                  <h4 className="text-xl font-bold text-white mb-4 leading-tight group-hover:text-[var(--color-neon-cyan)] transition-colors">{iq.question}</h4>
+                  <h4 className="text-xl font-bold text-[var(--foreground)] mb-4 leading-tight group-hover:text-[var(--color-neon-cyan)] transition-colors">{iq.question}</h4>
                   <div className="flex gap-3">
-                    <div className="mt-1"><Info className="w-4 h-4 text-white/30" /></div>
-                    <p className="text-sm text-white/50 italic leading-relaxed">{iq.context}</p>
+                    <div className="mt-1"><Info className="w-4 h-4 text-[var(--foreground)]/30" /></div>
+                    <p className="text-sm text-[var(--foreground)]/50 italic leading-relaxed">{iq.context}</p>
                   </div>
                 </div>
               ))}

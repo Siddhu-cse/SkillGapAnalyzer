@@ -75,25 +75,28 @@ export function SkillBot() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="absolute bottom-20 right-0 w-[400px] h-[600px] bg-[#0A0A0A] border border-white/20 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col overflow-hidden"
+            className="absolute bottom-20 right-0 w-[400px] h-[600px] bg-[var(--background)] border border-[var(--foreground)]/20 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex flex-col overflow-hidden transition-colors duration-300"
           >
+            {/* Background Texture */}
+            <div className="absolute inset-0 bg-noise opacity-20 pointer-events-none" />
+            
             {/* Header */}
-            <div className="p-6 bg-gradient-to-r from-[var(--color-neon-purple)]/20 to-[var(--color-neon-blue)]/20 border-b border-white/10 flex items-center justify-between">
+            <div className="p-6 bg-gradient-to-r from-[var(--color-neon-purple)]/10 to-[var(--color-neon-blue)]/10 border-b border-[var(--foreground)]/10 flex items-center justify-between relative z-10">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center relative">
+                <div className="w-10 h-10 rounded-xl bg-[var(--foreground)]/5 flex items-center justify-center relative">
                   <Bot className="w-6 h-6 text-[var(--color-neon-cyan)]" />
                   {isInterviewMode && (
                     <motion.div 
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-black flex items-center justify-center"
+                      className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full border-2 border-[var(--background)] flex items-center justify-center"
                     >
                       <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
                     </motion.div>
                   )}
                 </div>
                 <div>
-                  <h3 className="font-bold text-white">
+                  <h3 className="font-bold text-[var(--foreground)]">
                     {isInterviewMode ? "Shadow Interview" : "Skill Intelligence"}
                   </h3>
                   <div className="flex items-center gap-3 mt-1">
@@ -101,13 +104,13 @@ export function SkillBot() {
                       <>
                         <button 
                           onClick={() => setPersona("brutal")}
-                          className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${persona === "brutal" ? "bg-red-500/20 border-red-500 text-red-500" : "border-white/20 text-white/40 hover:border-white/40"}`}
+                          className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${persona === "brutal" ? "bg-red-500/20 border-red-500 text-red-600" : "border-[var(--foreground)]/20 text-[var(--foreground)]/40 hover:border-[var(--foreground)]/40"}`}
                         >
                           BRUTAL
                         </button>
                         <button 
                           onClick={() => setPersona("supportive")}
-                          className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${persona === "supportive" ? "bg-green-500/20 border-green-500 text-green-500" : "border-white/20 text-white/40 hover:border-white/40"}`}
+                          className={`text-[8px] px-2 py-0.5 rounded-full border transition-all ${persona === "supportive" ? "bg-green-500/20 border-green-500 text-green-600" : "border-[var(--foreground)]/20 text-[var(--foreground)]/40 hover:border-[var(--foreground)]/40"}`}
                         >
                           SUPPORTIVE
                         </button>
@@ -121,19 +124,19 @@ export function SkillBot() {
                   </div>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="text-white/40 hover:text-white transition-colors">
+              <button onClick={() => setIsOpen(false)} className="text-[var(--foreground)]/40 hover:text-[var(--foreground)] transition-colors">
                 <X className="w-6 h-6" />
               </button>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide relative z-10">
               {messages.map((msg, i) => (
                 <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div className={`max-w-[85%] p-4 rounded-2xl text-sm ${
                     msg.role === "user" 
                       ? "bg-[var(--color-neon-blue)] text-white ml-4 shadow-[0_4px_15px_rgba(0,225,255,0.2)]" 
-                      : "bg-white/5 border border-white/10 text-white/80 mr-4"
+                      : "bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 text-[var(--foreground)]/80 mr-4"
                   }`}>
                     {msg.content}
                   </div>
@@ -141,7 +144,7 @@ export function SkillBot() {
               ))}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-white/5 border border-white/10 p-4 rounded-2xl">
+                  <div className="bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 p-4 rounded-2xl">
                     <Loader2 className="w-4 h-4 animate-spin text-[var(--color-neon-cyan)]" />
                   </div>
                 </div>
@@ -150,7 +153,7 @@ export function SkillBot() {
             </div>
 
             {/* Quick Actions */}
-            <div className="px-6 pb-2 bg-black flex gap-2 overflow-x-auto scrollbar-hide">
+            <div className="px-6 pb-2 bg-[var(--background)] flex gap-2 overflow-x-auto scrollbar-hide relative z-10">
               <button 
                 onClick={() => { 
                   if (isInterviewMode) {
@@ -173,7 +176,7 @@ export function SkillBot() {
             </div>
 
             {/* Input */}
-            <div className="p-6 border-t border-white/10 bg-black">
+            <div className="p-6 border-t border-[var(--foreground)]/10 bg-[var(--background)] relative z-10">
               <div className="relative flex items-center">
                 <input
                   type="text"
@@ -181,7 +184,7 @@ export function SkillBot() {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={(e) => e.key === "Enter" && handleSend()}
                   placeholder="Ask about your skill gaps..."
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-6 pr-14 text-white placeholder:text-white/20 focus:outline-none focus:border-[var(--color-neon-cyan)]/50 transition-colors"
+                  className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-2xl py-4 pl-6 pr-14 text-[var(--foreground)] placeholder:text-[var(--foreground)]/20 focus:outline-none focus:border-[var(--color-neon-cyan)]/50 transition-colors"
                 />
                 <button 
                   onClick={() => handleSend()}

@@ -25,10 +25,10 @@ export function FeatureCard({ title, description, icon, delay = 0 }: FeatureCard
           {icon}
         </div>
       </div>
-      <h3 className="text-xl font-bold text-white mb-3 group-hover:text-gradient transition-all duration-300">
+      <h3 className="text-xl font-bold text-[var(--foreground)] mb-3 group-hover:text-gradient transition-all duration-300">
         {title}
       </h3>
-      <p className="text-white/60 leading-relaxed">
+      <p className="text-[var(--foreground)]/60 leading-relaxed">
         {description}
       </p>
     </motion.div>

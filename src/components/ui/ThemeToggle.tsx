@@ -15,14 +15,14 @@ export function ThemeToggle() {
 
   if (!mounted) {
     return (
-      <div className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 animate-pulse" />
+      <div className="w-9 h-9 rounded-lg bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 animate-pulse" />
     );
   }
 
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group relative overflow-hidden"
+      className="p-2 rounded-xl bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 hover:bg-[var(--foreground)]/10 transition-all group relative overflow-hidden"
       aria-label="Toggle theme"
     >
       <div className="relative w-5 h-5">
@@ -31,7 +31,7 @@ export function ThemeToggle() {
       </div>
       
       {/* Subtle hover glow */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-[var(--foreground)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
     </button>
   );
 }

@@ -1,6 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-// @ts-expect-error pdf-parse has no default export in some environments
-import pdfParse from "pdf-parse";
 import * as mammoth from "mammoth";
 export async function POST(req: NextRequest) {
   try {
@@ -20,27 +18,51 @@ export async function POST(req: NextRequest) {
 
     let resumeText = "";
     try {
-      const buffer = Buffer.from(await file.arrayBuffer());
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
       const fileName = file.name.toLowerCase();
+
+      console.log(`[API] Processing file: ${fileName}`);
+      console.log(`[API] Buffer size: ${buffer.length} bytes`);
 
       if (fileName.endsWith(".docx")) {
         const result = await mammoth.extractRawText({ buffer });
         resumeText = result.value;
       } else if (fileName.endsWith(".pdf")) {
-        const data = await pdfParse(buffer);
-        resumeText = data.text;
+        console.log("[API] Attempting PDF extraction...");
+        const pdf = require("pdf-parse");
+        
+        // Handle both the Mehmet Kozan fork (class-based) and the standard pdf-parse (function-based)
+        if (pdf.PDFParse && typeof pdf.PDFParse === 'function') {
+          console.log("[API] Using Mehmet Kozan fork (PDFParse class)");
+          const parser = new pdf.PDFParse({ data: buffer });
+          const result = await parser.getText();
+          resumeText = result.text;
+        } else {
+          console.log("[API] Using standard pdf-parse (function)");
+          const parse = typeof pdf === 'function' ? pdf : pdf.default;
+          if (typeof parse !== 'function') {
+            throw new Error("PDF parser module could not be initialized correctly.");
+          }
+          const data = await parse(buffer);
+          resumeText = data.text;
+        }
+        console.log(`[API] Extracted ${resumeText?.length || 0} characters from PDF.`);
       } else {
-        return NextResponse.json({ error: "Unsupported file format." }, { status: 400 });
+        return NextResponse.json({ error: "Unsupported file format. Use PDF or DOCX." }, { status: 400 });
       }
 
-      if (!resumeText || resumeText.trim().length === 0) {
-        throw new Error("No text content could be extracted.");
+      if (!resumeText || resumeText.trim().length < 10) {
+        console.error("[API] Extraction failed: Text is too short or empty.");
+        return NextResponse.json({ 
+          error: "We found no readable text in your CV. If it's a scanned image, please use a text-based PDF." 
+        }, { status: 400 });
       }
       
     } catch (err: any) {
-      console.error("PDF Parsing Error:", err);
+      console.error("[API] PDF/DOCX Parsing Error:", err);
       return NextResponse.json({ 
-        error: "PDF read failed. Ensure it is a valid text-based PDF." 
+        error: `CV Parsing Error: ${err.message || "Unknown error"}. Please try a different PDF.` 
       }, { status: 400 });
     }
 
