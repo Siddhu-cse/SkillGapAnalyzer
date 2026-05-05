@@ -11,61 +11,75 @@ export async function POST(req: NextRequest) {
     const targetCompany = formData.get("targetCompany") as string;
     const manualSkillsStr = formData.get("manualSkills") as string;
     const manualSkills = manualSkillsStr ? JSON.parse(manualSkillsStr) : [];
+    const directResumeText = formData.get("resumeText") as string;
 
-    if (!file || !jobDescription) {
-      return NextResponse.json({ error: "Missing required data." }, { status: 400 });
+    if (!jobDescription) {
+      return NextResponse.json({ error: "Missing required role data." }, { status: 400 });
     }
 
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) return NextResponse.json({ error: "No API Key." }, { status: 500 });
 
-    let resumeText = "";
-    try {
-      const arrayBuffer = await file.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-      const fileName = file.name.toLowerCase();
+    let resumeText = directResumeText || "";
+    
+    if (!resumeText) {
+      if (!file) {
+        return NextResponse.json({ error: "Missing resume data. Please upload a file or paste text." }, { status: 400 });
+      }
 
-      if (fileName.endsWith(".docx")) {
-        const result = await mammoth.extractRawText({ buffer });
-        resumeText = result.value;
-      } else if (fileName.endsWith(".pdf")) {
-        try {
-          const data = await pdfParse(buffer);
-          resumeText = data.text;
-          
-          if (!resumeText || resumeText.trim().length === 0) {
-            const pdfParser = new PDFParser(null, true);
-            resumeText = await new Promise((resolve, reject) => {
-              pdfParser.on("pdfParser_dataError", (errData: Error | { parserError: Error }) => reject(errData));
-              pdfParser.on("pdfParser_dataReady", () => {
-                resolve(pdfParser.getRawTextContent());
-              });
-              pdfParser.parseBuffer(buffer);
-            });
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const fileName = file.name.toLowerCase();
+
+        console.log(`[Parser] Analyzing file: ${fileName}, Size: ${buffer.length} bytes`);
+
+        if (fileName.endsWith(".docx")) {
+          const result = await mammoth.extractRawText({ buffer });
+          resumeText = result.value;
+        } else if (fileName.endsWith(".pdf")) {
+          // Attempt 1: pdf-parse
+          try {
+            console.log("[Parser] Attempting pdf-parse...");
+            const data = await pdfParse(buffer);
+            resumeText = data.text;
+          } catch (err) {
+            console.error("[Parser] pdf-parse failed:", err);
           }
-        } catch {
-          const pdfParser = new PDFParser(null, true);
-          resumeText = await new Promise((resolve, reject) => {
-            pdfParser.on("pdfParser_dataError", (errData: Error | { parserError: Error }) => reject(errData));
-            pdfParser.on("pdfParser_dataReady", () => {
-              resolve(pdfParser.getRawTextContent());
-            });
-            pdfParser.parseBuffer(buffer);
-          });
-        }
-      } else {
-        return NextResponse.json({ error: "Unsupported file format. Please upload a PDF or DOCX file." }, { status: 400 });
-      }
 
-      if (!resumeText || resumeText.trim().length === 0) {
-        throw new Error("No text content could be extracted from the file.");
+          // Attempt 2: pdf2json (Fallback or if text is empty)
+          if (!resumeText || resumeText.trim().length === 0) {
+            try {
+              console.log("[Parser] Attempting pdf2json fallback...");
+              const pdfParser = new PDFParser(null, true);
+              resumeText = await new Promise((resolve, reject) => {
+                pdfParser.on("pdfParser_dataError", (errData: any) => reject(errData));
+                pdfParser.on("pdfParser_dataReady", () => {
+                  const rawText = pdfParser.getRawTextContent();
+                  resolve(decodeURIComponent(rawText));
+                });
+                pdfParser.parseBuffer(buffer);
+              });
+            } catch (err) {
+              console.error("[Parser] pdf2json fallback failed:", err);
+            }
+          }
+        } else {
+          return NextResponse.json({ error: "Unsupported file format. Please upload a PDF or DOCX file." }, { status: 400 });
+        }
+
+        console.log(`[Parser] Extraction complete. Text length: ${resumeText?.length || 0}`);
+
+        if (!resumeText || resumeText.trim().length === 0) {
+          throw new Error("No text content could be extracted from the file. It might be an image-based scan.");
+        }
+        
+      } catch (err: unknown) {
+        console.error("[Parser] Final extraction error:", err);
+        return NextResponse.json({ 
+          error: "We couldn't read your CV properly. Please ensure it's not a scanned image and is a standard PDF or DOCX." 
+        }, { status: 400 });
       }
-      
-    } catch (err: unknown) {
-      console.error("File Parsing Error:", err);
-      return NextResponse.json({ 
-        error: "We couldn't read your CV properly. Please ensure it's not a scanned image and is a standard PDF or DOCX." 
-      }, { status: 400 });
     }
 
     const prompt = `You are 'The Brutal Career Architect'. You perform surgical-grade, unapologetic analysis with strict logical relevance. You do not sugarcoat.

@@ -9,11 +9,14 @@ import { useRouter } from "next/navigation";
 export default function AnalyzePage() {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
+  const [resumeText, setResumeText] = useState("");
+  const [isManualMode, setIsManualMode] = useState(false);
   const [roleSearch, setRoleSearch] = useState("");
   const [targetCompany, setTargetCompany] = useState("");
   const [manualSkills, setManualSkills] = useState<string[]>([]);
   const [newSkill, setNewSkill] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) setFile(e.target.files[0]);
   };
@@ -30,12 +33,17 @@ export default function AnalyzePage() {
   };
 
   const startAnalysis = async () => {
-    if (!file || !roleSearch) return;
+    if ((!file && !isManualMode) || (isManualMode && !resumeText) || !roleSearch) return;
     setIsAnalyzing(true);
     
     const formData = new FormData();
-    formData.append("resume", file);
-    formData.append("jobDescription", roleSearch); // Passing the role title as the JD context
+    if (isManualMode) {
+      formData.append("resumeText", resumeText);
+    } else {
+      if (file) formData.append("resume", file);
+    }
+    
+    formData.append("jobDescription", roleSearch); 
     if (targetCompany) formData.append("targetCompany", targetCompany);
     formData.append("manualSkills", JSON.stringify(manualSkills));
 
@@ -154,29 +162,60 @@ export default function AnalyzePage() {
             </div>
           </motion.div>
 
-          {/* Right: Profile Upload */}
+          {/* Right: Profile Input */}
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="glass-panel p-10 rounded-[3rem] border-2 border-dashed border-white/10 flex flex-col items-center justify-center text-center group hover:border-[var(--color-neon-cyan)]/30 transition-all cursor-pointer relative overflow-hidden"
+            className="space-y-6"
           >
-            <input 
-              type="file" 
-              onChange={handleFileUpload} 
-              className="absolute inset-0 opacity-0 cursor-pointer z-20"
-              accept=".pdf,.docx"
-            />
-            <div className="w-20 h-20 rounded-3xl bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-              <Upload className="w-8 h-8 text-[var(--color-neon-blue)]" />
+            <div className="flex items-center justify-between px-4">
+              <h2 className="text-sm font-black uppercase tracking-widest text-white/40 flex items-center gap-2">
+                <Shield className="w-4 h-4" />
+                Professional Identity
+              </h2>
+              <button 
+                onClick={() => setIsManualMode(!isManualMode)}
+                className="text-[10px] font-black uppercase tracking-widest text-[var(--color-neon-cyan)] hover:text-white transition-colors"
+              >
+                {isManualMode ? "Switch to File Upload" : "Switch to Paste Text"}
+              </button>
             </div>
-            <h3 className="text-xl font-bold mb-2">
-              {file ? file.name : "Upload Skill Profile"}
-            </h3>
-            <p className="text-white/30 text-sm mb-6">
-              {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : "PDF or DOCX format"}
-            </p>
-            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--color-neon-cyan)] opacity-0 group-hover:opacity-100 transition-opacity">
-              Drop file to initialize
+
+            {isManualMode ? (
+              <div className="glass-panel p-6 rounded-[2.5rem] border border-white/10 h-[320px] flex flex-col">
+                <textarea 
+                  placeholder="Paste your full resume text here... (Best for scanned PDFs or formatting issues)"
+                  value={resumeText}
+                  onChange={(e) => setResumeText(e.target.value)}
+                  className="flex-1 bg-white/5 border border-white/10 rounded-2xl p-6 text-sm outline-none resize-none focus:border-[var(--color-neon-cyan)]/50 transition-all font-mono"
+                />
+              </div>
+            ) : (
+              <div className="glass-panel p-10 rounded-[2.5rem] border-2 border-dashed border-white/10 h-[320px] flex flex-col items-center justify-center text-center group hover:border-[var(--color-neon-cyan)]/30 transition-all cursor-pointer relative overflow-hidden">
+                <input 
+                  type="file" 
+                  onChange={handleFileUpload} 
+                  className="absolute inset-0 opacity-0 cursor-pointer z-20"
+                  accept=".pdf,.docx"
+                />
+                <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                  <Upload className="w-6 h-6 text-[var(--color-neon-blue)]" />
+                </div>
+                <h3 className="text-lg font-bold mb-2">
+                  {file ? file.name : "Upload Skill Profile"}
+                </h3>
+                <p className="text-white/30 text-xs mb-6">
+                  {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : "Standard PDF or DOCX"}
+                </p>
+                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--color-neon-cyan)] opacity-0 group-hover:opacity-100 transition-opacity">
+                  Drop file to initialize
+                </div>
+              </div>
+            )}
+            
+            <div className="px-4 py-3 rounded-2xl bg-[var(--color-neon-purple)]/5 border border-[var(--color-neon-purple)]/20 text-[10px] text-white/60 leading-relaxed">
+              <span className="text-[var(--color-neon-purple)] font-black uppercase mr-2">Pro Tip:</span>
+              If your PDF is an image scan, use the "Paste Text" mode for 100% accuracy.
             </div>
           </motion.div>
         </div>
@@ -190,7 +229,7 @@ export default function AnalyzePage() {
         >
           <Button 
             size="lg" 
-            disabled={!file || !roleSearch || isAnalyzing}
+            disabled={(!file && !isManualMode) || (isManualMode && !resumeText) || !roleSearch || isAnalyzing}
             onClick={startAnalysis}
             className="px-20 py-10 text-2xl rounded-3xl font-black uppercase tracking-[0.2em] shadow-[0_0_40px_rgba(0,225,255,0.2)] disabled:opacity-20"
           >
