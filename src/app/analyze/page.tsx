@@ -17,45 +17,8 @@ export default function AnalyzePage() {
   const [newSkill, setNewSkill] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  const [isExtracting, setIsExtracting] = useState(false);
-
-  const extractText = async (file: File) => {
-    setIsExtracting(true);
-    try {
-      if (file.name.toLowerCase().endsWith(".pdf")) {
-        const pdfjs = await import("pdfjs-dist");
-        pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs`;
-        
-        const arrayBuffer = await file.arrayBuffer();
-        const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
-        let text = "";
-        
-        for (let i = 1; i <= pdf.numPages; i++) {
-          const page = await pdf.getPage(i);
-          const content = await page.getTextContent();
-          const strings = content.items.map((item: any) => item.str);
-          text += strings.join(" ") + "\n";
-        }
-        setResumeText(text);
-      } else if (file.name.toLowerCase().endsWith(".docx")) {
-        const mammoth = await import("mammoth");
-        const arrayBuffer = await file.arrayBuffer();
-        const result = await mammoth.extractRawText({ arrayBuffer });
-        setResumeText(result.value);
-      }
-    } catch (err) {
-      console.error("Client-side extraction failed:", err);
-    } finally {
-      setIsExtracting(false);
-    }
-  };
-
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-      await extractText(selectedFile);
-    }
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) setFile(e.target.files[0]);
   };
 
   const addSkill = () => {
@@ -70,13 +33,11 @@ export default function AnalyzePage() {
   };
 
   const startAnalysis = async () => {
-    if ((!file && !resumeText) || !roleSearch) return;
+    if (!file || !roleSearch) return;
     setIsAnalyzing(true);
     
     const formData = new FormData();
-    if (resumeText) formData.append("resumeText", resumeText);
-    if (file) formData.append("resume", file);
-    
+    formData.append("resume", file);
     formData.append("jobDescription", roleSearch); 
     if (targetCompany) formData.append("targetCompany", targetCompany);
     formData.append("manualSkills", JSON.stringify(manualSkills));
@@ -196,67 +157,29 @@ export default function AnalyzePage() {
             </div>
           </motion.div>
 
-          {/* Right: Profile Input */}
+          {/* Right: Profile Upload */}
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-6"
+            className="glass-panel p-10 rounded-[3rem] border-2 border-dashed border-white/10 flex flex-col items-center justify-center text-center group hover:border-[var(--color-neon-cyan)]/30 transition-all cursor-pointer relative overflow-hidden"
           >
-            <div className="flex items-center justify-between px-4">
-              <h2 className="text-sm font-black uppercase tracking-widest text-white/40 flex items-center gap-2">
-                <Shield className="w-4 h-4" />
-                Professional Identity
-              </h2>
-              <button 
-                onClick={() => setIsManualMode(!isManualMode)}
-                className="text-[10px] font-black uppercase tracking-widest text-[var(--color-neon-cyan)] hover:text-white transition-colors"
-              >
-                {isManualMode ? "Switch to File Upload" : "Switch to Paste Text"}
-              </button>
+            <input 
+              type="file" 
+              onChange={handleFileUpload} 
+              className="absolute inset-0 opacity-0 cursor-pointer z-20"
+              accept=".pdf,.docx"
+            />
+            <div className="w-20 h-20 rounded-3xl bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <Upload className="w-8 h-8 text-[var(--color-neon-blue)]" />
             </div>
-
-            {isManualMode ? (
-              <div className="glass-panel p-6 rounded-[2.5rem] border border-white/10 h-[320px] flex flex-col">
-                <textarea 
-                  placeholder="Paste your full resume text here... (Best for scanned PDFs or formatting issues)"
-                  value={resumeText}
-                  onChange={(e) => setResumeText(e.target.value)}
-                  className="flex-1 bg-white/5 border border-white/10 rounded-2xl p-6 text-sm outline-none resize-none focus:border-[var(--color-neon-cyan)]/50 transition-all font-mono"
-                />
-              </div>
-            ) : (
-              <div className="glass-panel p-10 rounded-[2.5rem] border-2 border-dashed border-white/10 h-[320px] flex flex-col items-center justify-center text-center group hover:border-[var(--color-neon-cyan)]/30 transition-all cursor-pointer relative overflow-hidden">
-                <input 
-                  type="file" 
-                  onChange={handleFileUpload} 
-                  className="absolute inset-0 opacity-0 cursor-pointer z-20"
-                  accept=".pdf,.docx"
-                  disabled={isExtracting}
-                />
-                <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  {isExtracting ? (
-                    <div className="w-6 h-6 border-2 border-[var(--color-neon-blue)] border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <Upload className="w-6 h-6 text-[var(--color-neon-blue)]" />
-                  )}
-                </div>
-                <h3 className="text-lg font-bold mb-2">
-                  {isExtracting ? "Parsing Document..." : (file ? file.name : "Upload Skill Profile")}
-                </h3>
-                <p className="text-white/30 text-xs mb-6">
-                  {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : "Standard PDF or DOCX"}
-                </p>
-                {!isExtracting && (
-                  <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--color-neon-cyan)] opacity-0 group-hover:opacity-100 transition-opacity">
-                    Drop file to initialize
-                  </div>
-                )}
-              </div>
-            )}
-            
-            <div className="px-4 py-3 rounded-2xl bg-[var(--color-neon-purple)]/5 border border-[var(--color-neon-purple)]/20 text-[10px] text-white/60 leading-relaxed">
-              <span className="text-[var(--color-neon-purple)] font-black uppercase mr-2">Status:</span>
-              {resumeText ? `Captured ${resumeText.length} characters of professional DNA.` : "Waiting for identity initialization."}
+            <h3 className="text-xl font-bold mb-2">
+              {file ? file.name : "Upload Skill Profile"}
+            </h3>
+            <p className="text-white/30 text-sm mb-6">
+              {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : "PDF or DOCX format"}
+            </p>
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--color-neon-cyan)] opacity-0 group-hover:opacity-100 transition-opacity">
+              Drop file to initialize
             </div>
           </motion.div>
         </div>
@@ -270,7 +193,7 @@ export default function AnalyzePage() {
         >
           <Button 
             size="lg" 
-            disabled={(!file && !resumeText) || !roleSearch || isAnalyzing || isExtracting}
+            disabled={!file || !roleSearch || isAnalyzing}
             onClick={startAnalysis}
             className="px-20 py-10 text-2xl rounded-3xl font-black uppercase tracking-[0.2em] shadow-[0_0_40px_rgba(0,225,255,0.2)] disabled:opacity-20"
           >
