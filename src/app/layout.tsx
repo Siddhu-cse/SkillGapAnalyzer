@@ -4,6 +4,8 @@ import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { SkillBot } from "@/components/layout/SkillBot";
 
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -28,11 +30,19 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-grid-pattern">
-        <Navbar />
-        <main className="flex-1 pt-20">{children}</main>
-        <SkillBot />
+      <body className="min-h-full flex flex-col bg-grid-pattern transition-colors duration-300">
+        <ThemeProvider
+          attribute="data-theme"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Navbar />
+          <main className="flex-1 pt-20">{children}</main>
+          <SkillBot />
+        </ThemeProvider>
       </body>
     </html>
   );

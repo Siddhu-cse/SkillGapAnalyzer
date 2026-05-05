@@ -63,7 +63,7 @@ export default function AnalyzePage() {
   };
 
   return (
-    <div className="min-h-screen py-24 relative overflow-hidden bg-black text-white">
+    <div className="min-h-screen py-24 relative overflow-hidden bg-[var(--background)] text-[var(--foreground)] transition-colors duration-300">
       {/* Background glow */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[var(--color-neon-blue)]/5 rounded-full blur-[120px] pointer-events-none" />
       
@@ -73,14 +73,14 @@ export default function AnalyzePage() {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-4">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 mb-4">
             <Sparkles className="w-3 h-3 text-[var(--color-neon-cyan)]" />
             <span className="text-[10px] font-black uppercase tracking-widest text-[var(--color-neon-cyan)]">Self-Audit Module</span>
           </div>
           <h1 className="text-4xl md:text-6xl font-black mb-4 uppercase tracking-tighter">
             Initialize <span className="text-gradient">Diagnostic</span>
           </h1>
-          <p className="text-white/40 text-lg max-w-xl mx-auto">
+          <p className="text-[var(--foreground)]/40 text-lg max-w-xl mx-auto">
             Research your target role and benchmark your professional DNA against real-time market requirements.
           </p>
         </motion.div>
@@ -93,9 +93,9 @@ export default function AnalyzePage() {
             className="space-y-8"
           >
             {/* Role Search & Target Company */}
-            <div className="glass-panel p-8 rounded-[2.5rem] border border-white/10 space-y-6">
+            <div className="glass-panel p-8 rounded-[2.5rem] border border-[var(--foreground)]/10 space-y-6">
               <div>
-                <h2 className="text-sm font-black uppercase tracking-widest text-white/40 mb-4 flex items-center gap-2">
+                <h2 className="text-sm font-black uppercase tracking-widest text-[var(--foreground)]/40 mb-4 flex items-center gap-2">
                   <Search className="w-4 h-4" />
                   Target Career Path
                 </h2>
@@ -105,13 +105,13 @@ export default function AnalyzePage() {
                     placeholder="e.g. Senior Full Stack Engineer"
                     value={roleSearch}
                     onChange={(e) => setRoleSearch(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:border-[var(--color-neon-cyan)] transition-colors outline-none text-white font-medium"
+                    className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-2xl px-6 py-4 focus:border-[var(--color-neon-cyan)] transition-colors outline-none text-[var(--foreground)] font-medium"
                   />
                 </div>
               </div>
               
               <div>
-                <h2 className="text-sm font-black uppercase tracking-widest text-white/40 mb-4 flex items-center gap-2">
+                <h2 className="text-sm font-black uppercase tracking-widest text-[var(--foreground)]/40 mb-4 flex items-center gap-2">
                   <Shield className="w-4 h-4" />
                   Target Company (Optional)
                 </h2>
@@ -121,15 +121,15 @@ export default function AnalyzePage() {
                     placeholder="e.g. Google, Stripe, OpenAI"
                     value={targetCompany}
                     onChange={(e) => setTargetCompany(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 focus:border-[var(--color-neon-purple)] transition-colors outline-none text-white font-medium"
+                    className="w-full bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-2xl px-6 py-4 focus:border-[var(--color-neon-purple)] transition-colors outline-none text-[var(--foreground)] font-medium"
                   />
                 </div>
               </div>
             </div>
 
             {/* Manual Skill Audit */}
-            <div className="glass-panel p-8 rounded-[2.5rem] border border-white/10">
-              <h2 className="text-sm font-black uppercase tracking-widest text-white/40 mb-6 flex items-center gap-2">
+            <div className="glass-panel p-8 rounded-[2.5rem] border border-[var(--foreground)]/10">
+              <h2 className="text-sm font-black uppercase tracking-widest text-[var(--foreground)]/40 mb-6 flex items-center gap-2">
                 <Zap className="w-4 h-4" />
                 Skill Overrides
               </h2>
@@ -140,9 +140,9 @@ export default function AnalyzePage() {
                   value={newSkill}
                   onChange={(e) => setNewSkill(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && addSkill()}
-                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm outline-none"
+                  className="flex-1 bg-[var(--foreground)]/5 border border-[var(--foreground)]/10 rounded-xl px-4 py-2 text-sm outline-none"
                 />
-                <button onClick={addSkill} className="p-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors">
+                <button onClick={addSkill} className="p-2 rounded-xl bg-[var(--foreground)]/5 hover:bg-[var(--foreground)]/10 transition-colors">
                   <Plus className="w-5 h-5" />
                 </button>
               </div>
@@ -150,7 +150,7 @@ export default function AnalyzePage() {
                 {manualSkills.map(s => (
                   <span key={s} className="px-3 py-1 rounded-lg bg-[var(--color-neon-blue)]/10 border border-[var(--color-neon-blue)]/20 text-[10px] font-bold text-[var(--color-neon-blue)] flex items-center gap-2">
                     {s}
-                    <X className="w-3 h-3 cursor-pointer hover:text-white" onClick={() => removeSkill(s)} />
+                    <X className="w-3 h-3 cursor-pointer hover:text-[var(--foreground)]" onClick={() => removeSkill(s)} />
                   </span>
                 ))}
               </div>
@@ -161,7 +161,7 @@ export default function AnalyzePage() {
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="glass-panel p-10 rounded-[3rem] border-2 border-dashed border-white/10 flex flex-col items-center justify-center text-center group hover:border-[var(--color-neon-cyan)]/30 transition-all cursor-pointer relative overflow-hidden"
+            className="glass-panel p-10 rounded-[3rem] border-2 border-dashed border-[var(--foreground)]/10 flex flex-col items-center justify-center text-center group hover:border-[var(--color-neon-cyan)]/30 transition-all cursor-pointer relative overflow-hidden"
           >
             <input 
               type="file" 
@@ -169,13 +169,13 @@ export default function AnalyzePage() {
               className="absolute inset-0 opacity-0 cursor-pointer z-20"
               accept=".pdf,.docx"
             />
-            <div className="w-20 h-20 rounded-3xl bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <div className="w-20 h-20 rounded-3xl bg-[var(--foreground)]/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
               <Upload className="w-8 h-8 text-[var(--color-neon-blue)]" />
             </div>
             <h3 className="text-xl font-bold mb-2">
               {file ? file.name : "Upload Skill Profile"}
             </h3>
-            <p className="text-white/30 text-sm mb-6">
+            <p className="text-[var(--foreground)]/30 text-sm mb-6">
               {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : "PDF or DOCX format"}
             </p>
             <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--color-neon-cyan)] opacity-0 group-hover:opacity-100 transition-opacity">

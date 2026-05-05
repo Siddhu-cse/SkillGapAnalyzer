@@ -2,8 +2,25 @@
 
 /* Root variables */
 :root {
+  --background: #ffffff;
+  --foreground: #06030f;
+  --grid-color: rgba(0, 0, 0, 0.05);
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --panel-bg: rgba(255, 255, 255, 0.8);
+  
+  --color-neon-purple: #9d00ff;
+  --color-neon-blue: #0077ff;
+  --color-neon-cyan: #00b3ad;
+}
+
+[data-theme='dark'] {
   --background: #06030f;
   --foreground: #ededed;
+  --grid-color: rgba(255, 255, 255, 0.05);
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --panel-bg: rgba(10, 5, 25, 0.6);
 
   --color-neon-purple: #b026ff;
   --color-neon-blue: #00e1ff;
@@ -59,25 +76,28 @@ body {
 .bg-grid-pattern {
   background-size: 40px 40px;
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+  transition: background-image 0.3s ease;
 }
 
 /* Glassmorphism Utilities */
 .glass {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-bg);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s ease, border 0.3s ease;
 }
 
 .glass-panel {
-  background: rgba(10, 5, 25, 0.6);
+  background: var(--panel-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(176, 38, 255, 0.15);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s ease, border 0.3s ease;
 }
 
 /* Text Gradient */

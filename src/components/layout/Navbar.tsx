@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Brain } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 export function Navbar() {
   return (
@@ -13,27 +14,28 @@ export function Navbar() {
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--color-neon-purple)] to-[var(--color-neon-blue)] flex items-center justify-center shadow-[0_0_15px_rgba(176,38,255,0.4)] group-hover:shadow-[0_0_25px_rgba(0,225,255,0.6)] transition-shadow duration-300">
               <Brain className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-white group-hover:text-gradient transition-all duration-300">
+            <span className="text-xl font-bold tracking-tight text-[var(--foreground)] group-hover:text-gradient transition-all duration-300">
               SkillGap
             </span>
           </Link>
 
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/market" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
+            <Link href="/market" className="text-sm font-medium text-[var(--foreground)] opacity-70 hover:opacity-100 transition-opacity">
               Market Pulse
             </Link>
-            <Link href="/analyze" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
+            <Link href="/analyze" className="text-sm font-medium text-[var(--foreground)] opacity-70 hover:opacity-100 transition-opacity">
               Product
             </Link>
-            <Link href="/how-it-works" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
+            <Link href="/how-it-works" className="text-sm font-medium text-[var(--foreground)] opacity-70 hover:opacity-100 transition-opacity">
               How it Works
             </Link>
-            <Link href="/about" className="text-sm font-medium text-white/70 hover:text-white transition-colors">
+            <Link href="/about" className="text-sm font-medium text-[var(--foreground)] opacity-70 hover:opacity-100 transition-opacity">
               About
             </Link>
           </nav>
 
-          <div className="flex items-center">
+          <div className="flex items-center space-x-4">
+            <ThemeToggle />
             <Link href="/analyze">
               <Button size="sm">Start Analysis</Button>
             </Link>
