@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     const prompt = `You are the Elite Resume Repair Architect. Your job is to perform surgical-grade improvements on the following resume text to better align it with the target role: '${targetRole}'.
 
     RESUME TEXT:
-    ${resumeText.slice(0, 4000)}
+    ${resumeText.slice(0, 8000)}
 
     Rules:
     1. Identify the 3 weakest bullet points or sections.

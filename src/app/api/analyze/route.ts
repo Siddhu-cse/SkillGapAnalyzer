@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-// @ts-expect-error pdf-parse types
+// @ts-expect-error pdf-parse has no default export in some environments
 import pdfParse from "pdf-parse";
 import * as mammoth from "mammoth";
+import PDFParser from "pdf2json";
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
@@ -28,9 +29,30 @@ export async function POST(req: NextRequest) {
         const result = await mammoth.extractRawText({ buffer });
         resumeText = result.value;
       } else if (fileName.endsWith(".pdf")) {
-        // More robust way to call pdf-parse
-        const data = await pdfParse(buffer);
-        resumeText = data.text;
+        try {
+          const data = await pdfParse(buffer);
+          resumeText = data.text;
+          
+          if (!resumeText || resumeText.trim().length === 0) {
+            const pdfParser = new PDFParser(null, true);
+            resumeText = await new Promise((resolve, reject) => {
+              pdfParser.on("pdfParser_dataError", (errData: Error | { parserError: Error }) => reject(errData));
+              pdfParser.on("pdfParser_dataReady", () => {
+                resolve(pdfParser.getRawTextContent());
+              });
+              pdfParser.parseBuffer(buffer);
+            });
+          }
+        } catch {
+          const pdfParser = new PDFParser(null, true);
+          resumeText = await new Promise((resolve, reject) => {
+            pdfParser.on("pdfParser_dataError", (errData: Error | { parserError: Error }) => reject(errData));
+            pdfParser.on("pdfParser_dataReady", () => {
+              resolve(pdfParser.getRawTextContent());
+            });
+            pdfParser.parseBuffer(buffer);
+          });
+        }
       } else {
         return NextResponse.json({ error: "Unsupported file format. Please upload a PDF or DOCX file." }, { status: 400 });
       }
@@ -39,7 +61,7 @@ export async function POST(req: NextRequest) {
         throw new Error("No text content could be extracted from the file.");
       }
       
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("File Parsing Error:", err);
       return NextResponse.json({ 
         error: "We couldn't read your CV properly. Please ensure it's not a scanned image and is a standard PDF or DOCX." 
@@ -54,7 +76,9 @@ CONTEXT:
 - Target Role/JD: ${jobDescription}
 - Target Company: ${targetCompany || "General Market Standard"}
 - Manual Skill Audit: ${manualSkills.join(", ")}
-- Profile Identity: ${resumeText.slice(0, 4000)}
+- Profile Identity: ${resumeText.slice(0, 8000)}
+
+CRITICAL: You MUST use the 'Profile Identity' (the user's CV) as your primary source of truth for their current state. Analyze every detail mentioned in the CV to provide a highly personalized response.
 
 CRITICAL LOGIC RULES:
 0. DOMAIN AGNOSTIC: You must support ANY professional domain (e.g., Software, HR, Business, Agriculture, Hotel Management). Generate relevant skills, resources, and terminology specific to that domain.
