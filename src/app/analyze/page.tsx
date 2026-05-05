@@ -17,8 +17,45 @@ export default function AnalyzePage() {
   const [newSkill, setNewSkill] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) setFile(e.target.files[0]);
+  const [isExtracting, setIsExtracting] = useState(false);
+
+  const extractText = async (file: File) => {
+    setIsExtracting(true);
+    try {
+      if (file.name.toLowerCase().endsWith(".pdf")) {
+        const pdfjs = await import("pdfjs-dist");
+        pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs`;
+        
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjs.getDocument({ data: arrayBuffer }).promise;
+        let text = "";
+        
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          const strings = content.items.map((item: any) => item.str);
+          text += strings.join(" ") + "\n";
+        }
+        setResumeText(text);
+      } else if (file.name.toLowerCase().endsWith(".docx")) {
+        const mammoth = await import("mammoth");
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        setResumeText(result.value);
+      }
+    } catch (err) {
+      console.error("Client-side extraction failed:", err);
+    } finally {
+      setIsExtracting(false);
+    }
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      await extractText(selectedFile);
+    }
   };
 
   const addSkill = () => {
@@ -33,15 +70,12 @@ export default function AnalyzePage() {
   };
 
   const startAnalysis = async () => {
-    if ((!file && !isManualMode) || (isManualMode && !resumeText) || !roleSearch) return;
+    if ((!file && !resumeText) || !roleSearch) return;
     setIsAnalyzing(true);
     
     const formData = new FormData();
-    if (isManualMode) {
-      formData.append("resumeText", resumeText);
-    } else {
-      if (file) formData.append("resume", file);
-    }
+    if (resumeText) formData.append("resumeText", resumeText);
+    if (file) formData.append("resume", file);
     
     formData.append("jobDescription", roleSearch); 
     if (targetCompany) formData.append("targetCompany", targetCompany);
@@ -197,25 +231,32 @@ export default function AnalyzePage() {
                   onChange={handleFileUpload} 
                   className="absolute inset-0 opacity-0 cursor-pointer z-20"
                   accept=".pdf,.docx"
+                  disabled={isExtracting}
                 />
                 <div className="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                  <Upload className="w-6 h-6 text-[var(--color-neon-blue)]" />
+                  {isExtracting ? (
+                    <div className="w-6 h-6 border-2 border-[var(--color-neon-blue)] border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <Upload className="w-6 h-6 text-[var(--color-neon-blue)]" />
+                  )}
                 </div>
                 <h3 className="text-lg font-bold mb-2">
-                  {file ? file.name : "Upload Skill Profile"}
+                  {isExtracting ? "Parsing Document..." : (file ? file.name : "Upload Skill Profile")}
                 </h3>
                 <p className="text-white/30 text-xs mb-6">
                   {file ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : "Standard PDF or DOCX"}
                 </p>
-                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--color-neon-cyan)] opacity-0 group-hover:opacity-100 transition-opacity">
-                  Drop file to initialize
-                </div>
+                {!isExtracting && (
+                  <div className="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--color-neon-cyan)] opacity-0 group-hover:opacity-100 transition-opacity">
+                    Drop file to initialize
+                  </div>
+                )}
               </div>
             )}
             
             <div className="px-4 py-3 rounded-2xl bg-[var(--color-neon-purple)]/5 border border-[var(--color-neon-purple)]/20 text-[10px] text-white/60 leading-relaxed">
-              <span className="text-[var(--color-neon-purple)] font-black uppercase mr-2">Pro Tip:</span>
-              If your PDF is an image scan, use the "Paste Text" mode for 100% accuracy.
+              <span className="text-[var(--color-neon-purple)] font-black uppercase mr-2">Status:</span>
+              {resumeText ? `Captured ${resumeText.length} characters of professional DNA.` : "Waiting for identity initialization."}
             </div>
           </motion.div>
         </div>
@@ -229,7 +270,7 @@ export default function AnalyzePage() {
         >
           <Button 
             size="lg" 
-            disabled={(!file && !isManualMode) || (isManualMode && !resumeText) || !roleSearch || isAnalyzing}
+            disabled={(!file && !resumeText) || !roleSearch || isAnalyzing || isExtracting}
             onClick={startAnalysis}
             className="px-20 py-10 text-2xl rounded-3xl font-black uppercase tracking-[0.2em] shadow-[0_0_40px_rgba(0,225,255,0.2)] disabled:opacity-20"
           >
